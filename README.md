@@ -12,77 +12,75 @@ Smartrinse REST-API: App to Database
 
 - ### Register
 
-      - URL Route:
-          `/register/`
+    - URL Route:
+        `/register/`
 
-      - Method:
-          POST
+    - Method:
+        POST
 
-      - Request Body:
-          - `name` as `string`
-          - `email` as `string`, must be uniqe
-          - `password` as `string`
-          - `confPassword` as `string`
+    - Request Body:
+        - `name` as `string`
+        - `email` as `string`, must be uniqe
+        - `password` as `string`
+        - `confPassword` as `string`
 
-      - Response:
-            ```
-            {
-                "success": true,
-                "statusCode": 200,
-                "message": "User Created"
-            }
-            ```
+    - Response:
+        ```
+        {
+            "success": true,
+            "statusCode": 200,
+            "message": "User Created"
+        }
+        ```
 
 - ### Login
 
-      - URL Route:
-          `/login/`
+    - URL Route:
+        `/login/`
 
-      - Method:
-          POST
+    - Method:
+        POST
 
-      - Request Body:
-          - `email` as `string`, must be uniqe
-          - `password` as `string`
+    - Request Body:
+        - `email` as `string`, must be uniqe
+        - `password` as `string`
 
-      - Response:
-
-          ```
-          {
-            "success": true,
-            "statusCode": 200,
-            "message": "success",
-            "data": {
-                "userId": "user-OiniQO9tsS",
-                "isLaundry": false,
-                "name": "Pengguna 1",
-                "email": "pengguna1@gmail.com",
-                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLU9pbmlRTzl0c1MiLCJuYW1lIjoiUGVuZ2d1bmEgMSIsImVtYWlsSWQiOiJwZW5nZ3VuYTFAZ21haWwuY29tIiwiaWF0IjoxNjg0NTU2ODgzLCJleHAiOjE2ODQ1OTI4ODN9.iRL0Y6PL88e_RoCSTJ2IrpOkJ_AHIw4X3VmQEcAJzJ"
-            }
-          }
-          ```
+    - Response:
+        ```
+        {
+        "success": true,
+        "statusCode": 200,
+        "message": "success",
+        "data": {
+            "userId": "user-OiniQO9tsS",
+            "isLaundry": false,
+            "name": "Pengguna 1",
+            "email": "pengguna1@gmail.com",
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLU9pbmlRTzl0c1MiLCJuYW1lIjoiUGVuZ2d1bmEgMSIsImVtYWlsSWQiOiJwZW5nZ3VuYTFAZ21haWwuY29tIiwiaWF0IjoxNjg0NTU2ODgzLCJleHAiOjE2ODQ1OTI4ODN9.iRL0Y6PL88e_RoCSTJ2IrpOkJ_AHIw4X3VmQEcAJzJ"
+        }
+        }
+        ```
 - ### Create Laundry
 
-      - URL Route:
-          `/laundry/create`
+    - URL Route:
+        `/laundry/create`
 
-      - Method:
-          POST
+    - Method:
+        POST
 
-      - Headers:
-          - `Authorization` : `Bearer <token>`
+    - Headers:
+        - `Authorization` : `Bearer <token>`
 
-      - Request Body:
-          - `nama_laundry` as `string`
-          - `tanggal_berdiri` as `date`, 
-          - `kota` as `string`
-          - `latitude` as `string`
-          - `logitude` as `string`
-          - `jam_operasional` as `string`
-          - `photo` as `text`, optional 
+    - Request Body:
+        - `nama_laundry` as `string`
+        - `tanggal_berdiri` as `date`, 
+        - `kota` as `string`
+        - `latitude` as `string`
+        - `logitude` as `string`
+        - `jam_operasional` as `string`
+        - `photo` as `text`, optional 
 
-      - Response:
-
+    - Response:
         ```
         {
             "success": true,
