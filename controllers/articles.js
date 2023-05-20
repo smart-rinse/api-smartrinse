@@ -6,11 +6,9 @@ export const getArticle = async (req, res) => {
       success: true,
       statusCode: res.statusCode,
       message: "Article is ready",
-      article
+      article,
     });
   } catch (error) {
     console.log(error);
   }
 };
-
-

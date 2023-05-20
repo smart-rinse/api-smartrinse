@@ -1,9 +1,10 @@
+import Users from "../models/userModel.js";
 import Laundry from "../models/laundryModel.js";
 
 export const getLaundry = async (req, res) => {
   try {
     const laundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "kota", "photo"],
+      attributes: ["id", "nama_laundry", "kota","jam_operasional", "photo"],
     });
     res.json({
       success: true,
@@ -20,13 +21,13 @@ export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {
     const laundry = await Laundry.findByPk(laundryId, {
-      attributes: ["id", "nama_laundry", "tanggal_berdiri", "kota", "latitude", "longitude", "photo"],
+      attributes: ["id", "nama_laundry", "tanggal_berdiri", "kota", "latitude", "longitude","jam_operasional", "photo"],
     });
     if (!laundry)
       return res.status(404).json({
         success: false,
         statusCode: res.statusCode,
-        message: "Laundry tidak ditemukan",
+        message: "Laundry not found",
       });
     res.json({
       success: true,
@@ -39,14 +40,15 @@ export const getLaundryById = async (req, res) => {
   }
 };
 
-export const laundry = async (req, res) => {
-  const { nama_laundry, tanggal_berdiri, kota, latitude, longitude } = req.body;
-  var imageUrl = "";
+export const createLaundry = async (req, res) => {
+  const userId = req.user.userId; 
+  const { nama_laundry, tanggal_berdiri, kota, latitude, longitude, jam_operasional } = req.body;
+  let imageUrl = "";
 
   if (req.file && req.file.cloudStoragePublicUrl) {
     imageUrl = req.file.cloudStoragePublicUrl;
   }
-  if (!nama_laundry || !tanggal_berdiri || !kota || !latitude || !longitude)
+  if (!nama_laundry || !tanggal_berdiri || !kota || !latitude || !longitude || !jam_operasional)
     return res.status(400).json({
       success: false,
       statusCode: res.statusCode,
@@ -54,20 +56,41 @@ export const laundry = async (req, res) => {
     });
 
   try {
-    await Laundry.create({
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: "User not found",
+      });
+    }
+    const laundry = await Laundry.create({
       nama_laundry,
       tanggal_berdiri,
       kota,
       latitude,
       longitude,
+      jam_operasional,
       photo: imageUrl,
+      userId
     });
-    res.json({
+
+    user.isLaundry = true;
+    await user.save();
+
+    res.status(201).json({
       success: true,
-      statusCode: res.statusCode,
-      message: "Success",
+      statusCode: 201,
+      message: "Laundry created successfully",
+      laundry,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      error: {
+        message: error.message,
+      },
+    });
   }
 };
