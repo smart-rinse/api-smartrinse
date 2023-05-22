@@ -4,8 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/database.js";
 import router from "./routes/index.js";
-import Users from "./models/userModel.js";
-import Laundry from "./models/laundryModel.js";
+
 
 dotenv.config();
 const app = express();
@@ -13,8 +12,6 @@ const app = express();
 try {
     await db.authenticate();
     console.log('Database Connected');
-    await Users.sync();
-    await Laundry.sync();
 } catch (error) {
     console.error(error);
 }
@@ -24,7 +21,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
-    res.send("API Ready To GO!");
+    res.send("API Ready in Cloud Run");
   });
 app.use(router);
 
