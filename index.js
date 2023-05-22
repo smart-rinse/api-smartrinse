@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/database.js";
 import router from "./routes/index.js";
+import Users from "./models/userModel.js";
 import Laundry from "./models/laundryModel.js";
 
 dotenv.config();
@@ -12,7 +13,8 @@ const app = express();
 try {
     await db.authenticate();
     console.log('Database Connected');
-    
+    await Users.sync();
+    await Laundry.sync();
 } catch (error) {
     console.error(error);
 }
@@ -26,7 +28,8 @@ app.get("/", (req, res) => {
   });
 app.use(router);
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-  console.log(`Server running at port ${PORT}`);
+const PORT = process.env.PORT || 8080
+const HOST = '0.0.0.0'
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
