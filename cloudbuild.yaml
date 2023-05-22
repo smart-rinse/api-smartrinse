@@ -20,7 +20,7 @@ steps:
         "beta",
         "run",
         "deploy",
-        "api-test",
+        "api-smartrinse-test",
         "--image",
         "gcr.io/submission-mgce-asep/api:0.2",
         "--platform",
