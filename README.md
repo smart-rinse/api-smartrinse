@@ -1,5 +1,6 @@
 # Smartrinse-API
 
+<<<<<<< HEAD
 Smartrinse REST-API: App to Database
 
 # How to Use
@@ -7,6 +8,16 @@ Smartrinse REST-API: App to Database
 - Local Host: Run with node js, local IP and Port:3000
   `http://localhost:3000/`
 - Online Domain:
+=======
+Smartrinse REST-API
+
+# How to Use
+
+- `npm instal`
+- `npm run dev`
+- Local Host: Run with node js, local IP and Port:3000
+  `http://localhost:3000/`
+>>>>>>> 6d20678e868e4ad7cbb1a1a9bdce94ef5a1c4b49
 
 # Endpoint Route
 

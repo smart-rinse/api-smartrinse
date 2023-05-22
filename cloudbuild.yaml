@@ -22,7 +22,7 @@ steps:
         "deploy",
         "api-test",
         "--image",
-        "gcr.io/submission-mgce-asep/api:old",
+        "gcr.io/submission-mgce-asep/api:0.2",
         "--platform",
         "managed",
         "--region",
