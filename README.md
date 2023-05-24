@@ -6,7 +6,7 @@ Smartrinse REST-API: App to Database
 # How to Use
 
 - Local Host: Run with node js, local IP and Port:3000
-  `http://localhost:3000/`
+  `http://localhost:8080/`
 - # Online Domain:
   Smartrinse REST-API
 
@@ -15,8 +15,7 @@ Smartrinse REST-API: App to Database
 - `npm instal`
 - `npm run dev`
 - Local Host: Run with node js, local IP and Port:3000
-  `http://localhost:3000/`
-  > > > > > > > 6d20678e868e4ad7cbb1a1a9bdce94ef5a1c4b49
+  `http://localhost:8080/`
 
 # Endpoint Route
 
@@ -191,6 +190,7 @@ Smartrinse REST-API: App to Database
     - `rating` as `integer`
 
   - Response: 
+    ```
     {
         "success": true,
         "message": "Review created successfully",
@@ -203,6 +203,7 @@ Smartrinse REST-API: App to Database
             "userName": "Pengguna 2"
         }
     }
+    ```
 
 - ### Get All Users
 
@@ -365,6 +366,7 @@ Smartrinse REST-API: App to Database
     `keyword` as `string`
 
   - Response:
+    ```
     {
         "success": true,
         "message": "Laundry search results",
@@ -379,6 +381,7 @@ Smartrinse REST-API: App to Database
             }
         ]
     }
+    ```
 
 - ### Fitur Laundry by Rating
   - URL Route:
@@ -391,15 +394,7 @@ Smartrinse REST-API: App to Database
     `rating` as `string`
 
   - Response:
-- ### Article
-
-  - URL Route:
-    `/article/`
-
-  - Method:
-    GET
-
-  - Response:
+    ```
     {
         "success": true,
         "message": "Laundry search results",
@@ -414,6 +409,16 @@ Smartrinse REST-API: App to Database
             }
         ]
     }
+    ```
+- ### Article
+
+  - URL Route:
+    `/article/`
+
+  - Method:
+    GET
+
+  - Response:
     ```
     {
         "success": true,
