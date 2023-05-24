@@ -1,10 +1,13 @@
 import Users from "../models/userModel.js";
 import Laundry from "../models/laundryModel.js";
+import Review from "../models/reviewModel.js";
+import Sequelize from "sequelize";
+import {Op} from 'sequelize';
 
 export const getLaundry = async (req, res) => {
   try {
     const laundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "kota","jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
     });
     res.json({
       success: true,
@@ -21,7 +24,21 @@ export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {
     const laundry = await Laundry.findByPk(laundryId, {
-      attributes: ["id", "nama_laundry", "tanggal_berdiri", "kota", "latitude", "longitude","jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "tanggal_berdiri", "kota", "latitude", "longitude", "jam_operasional", "photo", "average_rating"],
+      include: [
+        {
+          model: Review,
+          as: "reviews",
+          attributes: ["id", "content", "rating"],
+          include: [
+            {
+              model: Users,
+              as: "user",
+              attributes: ["name", "photo"],
+            },
+          ],
+        },
+      ],
     });
     if (!laundry)
       return res.status(404).json({
@@ -29,19 +46,33 @@ export const getLaundryById = async (req, res) => {
         statusCode: res.statusCode,
         message: "Laundry not found",
       });
-    res.json({
+    const reviews = laundry.reviews;
+    const formattedReviews = reviews.map(({ id, content, rating, user }) => {
+      return {
+        id,
+        content,
+        rating,
+        name: user.name,
+        photo: user.photo
+      };
+    });
+    const response = {
       success: true,
       statusCode: res.statusCode,
       message: "Laundry fetched successfully",
-      laundry,
-    });
+      laundry: {
+        ...laundry.toJSON(),
+        reviews: formattedReviews,
+      },
+    };
+    res.json(response);
   } catch (error) {
     console.log(error);
   }
 };
 
 export const createLaundry = async (req, res) => {
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
   const { nama_laundry, tanggal_berdiri, kota, latitude, longitude, jam_operasional } = req.body;
   let imageUrl = "";
 
@@ -72,7 +103,7 @@ export const createLaundry = async (req, res) => {
       longitude,
       jam_operasional,
       photo: imageUrl,
-      userId
+      userId,
     });
 
     user.isLaundry = true;
@@ -91,6 +122,64 @@ export const createLaundry = async (req, res) => {
       error: {
         message: error.message,
       },
+    });
+  }
+};
+
+export const searchLaundry = async (req, res) => {
+  let { keyword } = req.query;
+  try {
+    const laundry = await Laundry.findAll({
+      where: {
+        nama_laundry: {
+          [Sequelize.Op.like]: `%${keyword}%`,
+        },
+      },
+      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
+    });
+    res.json({
+      success: true,
+      message: "Laundry search results",
+      keyword: keyword,
+      laundry,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while searching for laundry",
+    });
+  }
+};
+
+export const filterLaundryByRating = async (req, res) => {
+  let { rating } = req.query;
+  try {
+    let whereClause = {};
+    if (rating) {
+      const minRating = parseInt(rating);
+      const maxRating = minRating + 0.9;
+      whereClause = {
+        average_rating: {
+          [Sequelize.Op.between]: [minRating, maxRating],
+        },
+      };
+    }
+    const laundry = await Laundry.findAll({
+      where: whereClause,
+      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
+    });
+    res.json({
+      success: true,
+      message: "Laundry search results",
+      rating: rating,
+      laundry,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while searching for laundry",
     });
   }
 };

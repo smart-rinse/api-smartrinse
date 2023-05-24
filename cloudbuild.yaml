@@ -1,8 +1,8 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/submission-mgce-asep/api:0.2", "."]
+    args: ["build", "-t", "gcr.io/submission-mgce-asep/api:0.3", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/submission-mgce-asep/api:0.2"]
+    args: ["push", "gcr.io/submission-mgce-asep/api:0.3"]
     # Activate Cloud SQL API and Cloud SQL Admin API
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -22,7 +22,7 @@ steps:
         "deploy",
         "api-smartrinse-test",
         "--image",
-        "gcr.io/submission-mgce-asep/api:0.2",
+        "gcr.io/submission-mgce-asep/api:0.3",
         "--platform",
         "managed",
         "--region",
@@ -30,6 +30,6 @@ steps:
         "--add-cloudsql-instances",
         "submission-mgce-asep:us-central1:cloudrun-sql",
         "--allow-unauthenticated",
-        "--set-env-vars=DB_HOST=10.59.81.5,DB_DATABASE=smartrinse_db,DB_NAME=root,DB_PASSWORD=awan123,DB_DIALECT=mysql,ACCESS_TOKEN_SECRET=gugYAF653274t3urg4jrbhjq4rvvrwrvw3523952q34ybadsblaslfhdafas2777jdsfjkehf,REFRESH_TOKEN_SECRET=874UGugusfjkheatsecfugcehfhshfwiepwjef934095uhfdfnsbfeurutg33r80zsdawu7w",
+        # "--set-env-vars=DB_HOST=10.59.81.5,DB_DATABASE=smartrinse_db,DB_NAME=root,DB_PASSWORD=awan123,DB_DIALECT=mysql,ACCESS_TOKEN_SECRET=gugYAF653274t3urg4jrbhjq4rvvrwrvw3523952q34ybadsblaslfhdafas2777jdsfjkehf,REFRESH_TOKEN_SECRET=874UGugusfjkheatsecfugcehfhshfwiepwjef934095uhfdfnsbfeurutg33r80zsdawu7w",
         "--vpc-connector=test-connector"
       ]

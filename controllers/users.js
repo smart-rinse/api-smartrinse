@@ -38,7 +38,7 @@ export const getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await Users.findByPk(userId, {
-      attributes: ["id", "name", "email", "telephone", "gender", "city", "isLaundry"],
+      attributes: ["id", "name", "email", "telephone", "gender", "city", "isLaundry", "photo"],
     });
     const remainingLaundries = await Laundry.count({ where: { userId } });
     if (remainingLaundries === 0) {
@@ -258,6 +258,11 @@ export const changePassword = async (req, res) => {
 export const editUser = async (req, res) => {
   const { id } = req.params;
   const { telephone, gender, city } = req.body;
+  let imageUrl = "";
+
+  if (req.file && req.file.cloudStoragePublicUrl) {
+    imageUrl = req.file.cloudStoragePublicUrl;
+  }
   try {
     const user = await Users.findByPk(id);
     if (!user) {
@@ -271,6 +276,7 @@ export const editUser = async (req, res) => {
       telephone,
       gender,
       city,
+      photo: imageUrl,
     });
     res.json({
       success: true,

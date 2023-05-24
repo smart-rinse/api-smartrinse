@@ -34,6 +34,9 @@ const Laundry = db.define(
     photo: {
       type: DataTypes.TEXT,
     },
+    average_rating: {
+      type: DataTypes.FLOAT,
+    },
   },
   {
     tableName: "laundry",

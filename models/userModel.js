@@ -41,6 +41,10 @@ const Users = db.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    photo: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     isLaundry: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
