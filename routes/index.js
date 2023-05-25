@@ -8,6 +8,7 @@ import { uploadImage } from "../controllers/uploadImage.js";
 import Multer from "multer";
 import imgUpload from "../models/imgUpload.js";
 import { createReview } from "../controllers/review.js";
+import { faqApps } from "../controllers/faq.js";
 
 export const multer = Multer({
   storage: Multer.MemoryStorage,
@@ -34,6 +35,8 @@ router.get("/search", searchLaundry);
 router.get("/rating", filterLaundryByRating);
 
 router.get("/article", getArticle);
+router.get("/faq", faqApps);
+
 
 router.post("/uploadImage", multer.single("image"), imgUpload.uploadToGcs, uploadImage);
 
