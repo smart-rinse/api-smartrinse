@@ -140,8 +140,8 @@ export const Login = async (req, res) => {
     const isLaundry = user[0].isLaundry;
     const name = user[0].name;
     const emailId = user[0].email;
-    const accessToken = jwt.sign({ userId, name, emailId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10h" });
-    const refreshToken = jwt.sign({ userId, name, emailId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
+    const accessToken = jwt.sign({ userId, name, emailId }, process.env.ACCESS_TOKEN_SECRET);
+    const refreshToken = jwt.sign({ userId, name, emailId }, process.env.REFRESH_TOKEN_SECRET);
     await Users.update(
       { refresh_token: refreshToken },
       {
