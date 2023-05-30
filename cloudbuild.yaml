@@ -9,15 +9,12 @@ steps:
         "beta",
         "run",
         "deploy",
-        "api-smartrinse-test",
+        "api-smartrinse-ml",
         "--image",
-        "gcr.io/submission-mgce-asep/api:0.1",
+        "gcr.io/submission-mgce-asep/apiml:0.1",
         "--platform",
         "managed",
         "--region",
         "us-central1",
-        "--add-cloudsql-instances",
-        "submission-mgce-asep:us-central1:cloudrun-sql",
         "--allow-unauthenticated",
-        "--vpc-connector=test-connector"
       ]
