@@ -1,0 +1,23 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/submission-mgce-asep/apiml:0.1", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/submission-mgce-asep/apiml:0.1"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "api-smartrinse-test",
+        "--image",
+        "gcr.io/submission-mgce-asep/api:0.1",
+        "--platform",
+        "managed",
+        "--region",
+        "us-central1",
+        "--add-cloudsql-instances",
+        "submission-mgce-asep:us-central1:cloudrun-sql",
+        "--allow-unauthenticated",
+        "--vpc-connector=test-connector"
+      ]
