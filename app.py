@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
+from tensorflow.keras.optimizers import Adam
 import pickle
 import os
 
@@ -33,7 +34,14 @@ async def root():
 async def predict(request: dict):
     text = request.get('text')
     clean_text = my_pipeline(text)
-    loaded_model = load_model('model/model2.h5')
+    # loaded_model = load_model('model/model2.h5')
+    
+    # Mendefinisikan optimiser khusus Anda
+    custom_objects = {"CustomAdam": Adam}
+    
+    # Memuat model dengan mengatur custom_objects
+    loaded_model = load_model('model/model2.h5', custom_objects=custom_objects)
+    
     predictions = loaded_model.predict(clean_text)
     probability = max(predictions.tolist()[0])
     
