@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
+from tensorflow.keras.optimizers import Adam
 import pickle
 import os
 
@@ -9,14 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,7 +34,7 @@ async def root():
 async def predict(request: dict):
     text = request.get('text')
     clean_text = my_pipeline(text)
-    loaded_model = load_model('model/model2.h5')
+    loaded_model = load_model('model/model2.h5', custom_objects={'Adam': Adam})
     predictions = loaded_model.predict(clean_text)
     probability = max(predictions.tolist()[0])
     
