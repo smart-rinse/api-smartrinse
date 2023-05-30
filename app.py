@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 import pickle
+import os
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -53,4 +54,4 @@ async def predict(request: dict):
     }
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8080)
+    uvicorn.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
