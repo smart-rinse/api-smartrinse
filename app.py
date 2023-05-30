@@ -4,7 +4,6 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 import pickle
 import os
-import requests
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,24 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-url = 'https://storage.googleapis.com/machinelearning-27/tokenizer1.pkl'
-local_file_path = 'tokenizer1.pkl'
-
-response = requests.get(url)
-with open(local_file_path, 'wb') as f:
-    f.write(response.content)
-
-# Setelah file berhasil diunduh, Anda dapat membukanya seperti ini:
-with open(local_file_path, 'rb') as f:
+with open('tokenizer1.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
-
-url = 'https://storage.googleapis.com/machinelearning-27/model2.h5'
-local_model_path = 'model2.h5'
-
-response = requests.get(url)
-with open(local_model_path, 'wb') as f:
-    f.write(response.content)
-
 
 def my_pipeline(text):
     X = tokenizer.texts_to_sequences([text])
@@ -50,7 +33,7 @@ async def root():
 async def predict(request: dict):
     text = request.get('text')
     clean_text = my_pipeline(text)
-    loaded_model = load_model(local_model_path)
+    loaded_model = load_model('model/model2.h5')
     predictions = loaded_model.predict(clean_text)
     probability = max(predictions.tolist()[0])
     

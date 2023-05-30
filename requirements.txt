@@ -1,4 +1,6 @@
 fastapi==0.65.2
 uvicorn==0.14.0
 tensorflow==2.7.0
-gunicorn
+gunicorn==20.1.0
+h5py==2.10.0
+python-multipart
