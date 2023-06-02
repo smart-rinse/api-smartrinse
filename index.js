@@ -8,6 +8,7 @@ import bodyParser from "body-parser";
 import Users from "./models/userModel.js";
 import Review from "./models/reviewModel.js";
 import Laundry from "./models/laundryModel.js";
+import Favorite from "./models/favoriteModel.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ const app = express();
 try {
   await db.authenticate();
   console.log("Database Connected");
+  await Favorite.sync();
 } catch (error) {
   console.error(error);
 }

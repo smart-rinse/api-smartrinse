@@ -7,7 +7,7 @@ import {Op} from 'sequelize';
 export const getLaundry = async (req, res) => {
   try {
     const laundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_operasional", "photo"],
     });
     res.json({
       success: true,
@@ -20,11 +20,31 @@ export const getLaundry = async (req, res) => {
   }
 };
 
+export const getLaundryBySentiment = async (req, res) => {
+  try {
+    const laundry =  await Laundry.findAll({
+      attributes: ["id", "nama_laundry", "alamat", "jam_operasional", "photo"],
+      order: [['average_sentiment', 'DESC']],
+      limit: 5,
+    });
+    res.json({
+      success: true,
+      statusCode: res.statusCode,
+      message: 'Laundry fetched successfully',
+      laundry,
+    });
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
 export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {
     const laundry = await Laundry.findByPk(laundryId, {
-      attributes: ["id", "nama_laundry", "tanggal_berdiri", "kota", "latitude", "longitude", "jam_operasional", "photo", "average_rating"],
+      attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_operasional", "photo", "average_rating"],
       include: [
         {
           model: Review,
@@ -73,13 +93,13 @@ export const getLaundryById = async (req, res) => {
 
 export const createLaundry = async (req, res) => {
   const userId = req.user.userId;
-  const { nama_laundry, tanggal_berdiri, kota, latitude, longitude, jam_operasional } = req.body;
+  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_operasional } = req.body;
   let imageUrl = "";
 
   if (req.file && req.file.cloudStoragePublicUrl) {
     imageUrl = req.file.cloudStoragePublicUrl;
   }
-  if (!nama_laundry || !tanggal_berdiri || !kota || !latitude || !longitude || !jam_operasional)
+  if (!nama_laundry || !tanggal_berdiri || !alamat || !latitude || !longitude || !jam_operasional)
     return res.status(400).json({
       success: false,
       statusCode: res.statusCode,
@@ -98,7 +118,7 @@ export const createLaundry = async (req, res) => {
     const laundry = await Laundry.create({
       nama_laundry,
       tanggal_berdiri,
-      kota,
+      alamat,
       latitude,
       longitude,
       jam_operasional,
@@ -135,7 +155,7 @@ export const searchLaundry = async (req, res) => {
           [Sequelize.Op.like]: `%${keyword}%`,
         },
       },
-      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_operasional", "photo"],
     });
     res.json({
       success: true,
@@ -167,7 +187,7 @@ export const filterLaundryByRating = async (req, res) => {
     }
     const laundry = await Laundry.findAll({
       where: whereClause,
-      attributes: ["id", "nama_laundry", "kota", "jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_operasional", "photo"],
     });
     res.json({
       success: true,
@@ -183,3 +203,4 @@ export const filterLaundryByRating = async (req, res) => {
     });
   }
 };
+

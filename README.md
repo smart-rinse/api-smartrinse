@@ -1,20 +1,10 @@
 # Smartrinse-API
 
-<<<<<<< HEAD
-Smartrinse REST-API: App to Database
-
-# How to Use
-
-- Local Host: Run with node js, local IP and Port:3000
-  `http://localhost:8080/`
-- # Online Domain:
-  Smartrinse REST-API
-
 # How to Use
 
 - `npm instal`
 - `npm run dev`
-- Local Host: Run with node js, local IP and Port:3000
+- Local Host: Run with node js, local IP and Port:8080
   `http://localhost:8080/`
 
 # Endpoint Route
@@ -129,7 +119,7 @@ Smartrinse REST-API: App to Database
 
     - `nama_laundry` as `string`
     - `tanggal_berdiri` as `date`,
-    - `kota` as `string`
+    - `alamat` as `string`
     - `latitude` as `string`
     - `logitude` as `string`
     - `jam_operasional` as `string`
@@ -146,7 +136,7 @@ Smartrinse REST-API: App to Database
               "id": "laundry-xSwrKTK37V",
               "nama_laundry": "Ngelondry",
               "tanggal_berdiri": "2020-04-04",
-              "kota": "Bandung",
+              "alamat": "Bandung",
               "latitude": "-10.223",
               "longitude": "-17.321",
               "jam_operasional": "08.00 - 22.00",
@@ -204,6 +194,41 @@ Smartrinse REST-API: App to Database
         }
     }
     ```
+- ### Create Laundry Favorit
+  - URL Route:
+    `/favorite/:id_laundry`
+
+  - Method:
+    POST
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response: 
+    - Status: 200
+      ```
+      {
+        "success": true,
+        "statusCode": 200,
+        "message": "Laundry chosen as favorite successfully"
+      }
+      ```
+    - Status: 400
+      ```
+      {
+        success: false,
+        statusCode: 400,
+        message: "Laundry already chosen as favorite",
+      }
+      ```
+    - Status: 404
+      ```
+      {
+        success: false,
+        statusCode: 404,
+        message: "Laundry Not Found",
+      }
+      ```
 
 - ### Get All Users
 
@@ -301,7 +326,32 @@ Smartrinse REST-API: App to Database
             {
                 "id": "laundry-a0co9b2tqd",
                 "nama_laundry": "Sahabat Laundry",
-                "kota": "Garut",
+                "alamat": "Garut",
+                "jam_operasional": "08.00 - 22.00",
+                "photo": ""
+            },
+        ]
+    }
+    ```
+- ### Get All Laundry By Sentiment
+
+  - URL Route:
+    `/laundry/sentiment`
+
+  - Method:
+    GET
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "statusCode": 200,
+        "message": "Users fetched successfully",
+        "laundry": [
+            {
+                "id": "laundry-a0co9b2tqd",
+                "nama_laundry": "Sahabat Laundry",
+                "alamat": "Garut",
                 "jam_operasional": "08.00 - 22.00",
                 "photo": ""
             },
@@ -328,7 +378,7 @@ Smartrinse REST-API: App to Database
               "id": "laundry-a0co9b2tqd",
               "nama_laundry": "Sahabat Laundry",
               "tanggal_berdiri": "2020-01-01",
-              "kota": "Garut",
+              "alamat": "Garut",
               "latitude": "-7.227906",
               "longitude": "107.908699",
               "jam_operasional": "08.00 - 22.00",
@@ -375,7 +425,7 @@ Smartrinse REST-API: App to Database
             {
                 "id": "laundry-ew5eNjjB2e",
                 "nama_laundry": "Cuy Laundry",
-                "kota": "Garut",
+                "alamat": "Garut",
                 "jam_operasional": "07.00 - 22.00",
                 "photo": "https://storage.googleapis.com/image-upload-27/20230523-173656"
             }
@@ -403,7 +453,7 @@ Smartrinse REST-API: App to Database
             {
                 "id": "laundry-bFU4PB2JOt",
                 "nama_laundry": "Sobat Laundry",
-                "kota": "Garut",
+                "alamat": "Garut",
                 "jam_operasional": "07.00 - 22.00",
                 "photo": "https://storage.googleapis.com/image-upload-27/20230523-143356"
             }
@@ -437,6 +487,59 @@ Smartrinse REST-API: App to Database
         ]
     }
     ```
+- ### FAQ
+
+  - URL Route:
+    `/faq/`
+
+  - Method:
+    GET
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "statusCode": 200,
+        "message": "FAQ is ready",
+        "faq": [
+            {
+                "id": "1",
+                "question": "Bagaimana cara kerja aplikasi ini?",
+                "answer": "Aplikasi ini memungkinkan Anda untuk melakukan pemesanan laundry dengan menginisiasi percakapan melalui chat dengan penyedia jasa laundry."
+            },
+        ]
+    }
+    ```
+- ### Get Laundry Favorite
+
+  - URL Route:
+    `/favorite/laundry`
+
+  - Method:
+    GET
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "statusCode": 200,
+        "message": "Favorite laundry fetched successfully",
+        "laundry": [
+            {
+                "id": "laundry-a0co9b2tqd",
+                "nama_laundry": "Sahabat Laundry",
+                "alamat": "Garut",
+                "jam_operasional": "08.00 - 22.00",
+                "photo": ""
+            },
+        ]
+    }
+    ```
+
+
 
 - ### Refresh Token
 
@@ -505,7 +608,6 @@ Smartrinse REST-API: App to Database
     PUT
 
   - Headers:
-
     - `Authorization` : `Bearer <token>`
 
   - Request Body: - `telephone` as `string` - `gender` as `string` - `city` as `string`
@@ -548,3 +650,39 @@ Smartrinse REST-API: App to Database
         "message": "Logout success"
     }
     ```
+- ### Remove Laundry Favorite
+
+  - URL Route:
+    `/favorite/delete/:idlaundry`
+
+  - Method:
+    DELETE
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    - Status: 200
+      ```
+      {
+          "success": true,
+          "statusCode": 200,
+          "message": "Favorite laundry removed successfully"
+      }
+      ```
+    - Status: 404
+      ```
+      {
+        success: false,
+        statusCode: 404,
+        message: 'Laundry not found',
+      }
+      ```
+      ```
+      {
+        success: false,
+        statusCode: 404,
+        message: 'Laundry is not a favorite',
+      }
+      ```
+

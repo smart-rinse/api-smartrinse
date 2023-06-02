@@ -19,7 +19,7 @@ const Laundry = db.define(
     tanggal_berdiri: {
       type: DataTypes.DATEONLY,
     },
-    kota: {
+    alamat: {
       type: DataTypes.STRING,
     },
     latitude: {
@@ -35,6 +35,9 @@ const Laundry = db.define(
       type: DataTypes.TEXT,
     },
     average_rating: {
+      type: DataTypes.FLOAT,
+    },
+    average_sentiment: {
       type: DataTypes.FLOAT,
     },
   },

@@ -74,3 +74,8 @@ export const article = [
     thumbnail: "https://storage.googleapis.com/image-article-27/article-8.jpg"
   },
 ];
+
+
+export const article1 = {
+  article_1: "Punya bisnis laundry autopilot jadi impian setiap orang yang mempunyai jasa kucek. Pastinya enak ya laundry bisa ditinggal tanpa kehadiran kita sebagai owner untuk mengawasi langsung karena sudah berjalan dengan  sendirinya dan berkelanjutan.. Tapi apakah bisa bisnis laundry seperti ini, bagaimana sih langkah membangun bisnis laundry autopilot?Ketika kita merintis bisnis biasanya kita sendiri yang melakukan seluruh operasional mulai dari mencuci, menjemur, mengeringkan, menyetrika dan mengantarkan baju ke pelanggan. Mungkin pada awalnya akan  dibantu oleh suami/istri atau pasangan. Tapi seiring waktu, bisnis laundry bisa kita delegasikan tugasanya kepada karyawan."
+}

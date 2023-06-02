@@ -19,6 +19,9 @@ const Review = db.define(
     rating: {
       type: DataTypes.INTEGER,
     },
+    sentiment: {
+      type: DataTypes.FLOAT,
+    },
   },
   {
     tableName: "review",
