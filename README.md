@@ -1,5 +1,4 @@
 # Smartrinse-API
-
 # How to Use
 
 - `npm instal`
@@ -18,7 +17,6 @@
     POST
 
   - Request Body:
-
     - `name` as `string`
     - `email` as `string`, must be uniqe
     - `password` as `string`
