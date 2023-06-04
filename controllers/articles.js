@@ -1,4 +1,4 @@
-import { article } from "../models/article.js";
+import { article } from "../helper/article.js";
 
 export const getArticle = async (req, res) => {
   try {

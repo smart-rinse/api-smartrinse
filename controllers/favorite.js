@@ -41,7 +41,7 @@ export const getLaundryByFavorite = async (req, res) => {
   try {
     const { userId } = req.user;
     const favoriteLaundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "alamat", "jam_operasional", "photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_buka","jam_tutup", "photo"],
       include: [
         {
           model: Favorite,
@@ -49,11 +49,12 @@ export const getLaundryByFavorite = async (req, res) => {
         },
       ],
     });
-    const laundry = favoriteLaundry.map(({ id, nama_laundry, alamat, jam_operasional, photo }) => ({
+    const laundry = favoriteLaundry.map(({ id, nama_laundry, alamat, jam_buka,jam_tutup, photo }) => ({
       id,
       nama_laundry,
       alamat,
-      jam_operasional,
+      jam_buka,
+      jam_tutup,
       photo,
     }));
 

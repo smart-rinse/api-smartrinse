@@ -28,7 +28,10 @@ const Laundry = db.define(
     longitude: {
       type: DataTypes.STRING,
     },
-    jam_operasional: {
+    jam_buka: {
+      type: DataTypes.STRING,
+    },
+    jam_tutup: {
       type: DataTypes.STRING,
     },
     photo: {
@@ -39,6 +42,12 @@ const Laundry = db.define(
     },
     average_sentiment: {
       type: DataTypes.FLOAT,
+    },
+    count_reviews: {
+      type: DataTypes.INTEGER,
+    },
+    rekening: {
+      type: DataTypes.INTEGER,
     },
   },
   {

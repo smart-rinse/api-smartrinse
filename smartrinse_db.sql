@@ -95,6 +95,8 @@ CREATE TABLE `review` (
 ALTER TABLE laundry
 CHANGE kota alamat varchar(255) DEFAULT NULL,
 
+ALTER TABLE laundry RENAME COLUMN jam_operasional TO jam_buka;
+
 
 
 

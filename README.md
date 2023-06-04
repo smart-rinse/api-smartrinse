@@ -122,7 +122,8 @@
     - `alamat` as `string`
     - `latitude` as `string`
     - `logitude` as `string`
-    - `jam_operasional` as `string`
+    - `jam_buka` as `string`
+    - `jam_tutup` as `string`
     - `photo` as `text`, optional
 
   - Response:
@@ -139,7 +140,8 @@
               "alamat": "Bandung",
               "latitude": "-10.223",
               "longitude": "-17.321",
-              "jam_operasional": "08.00 - 22.00",
+              "jam_buka": "08.00 - 22.00",
+              "jam_tutup": "08.00 - 22.00",
               "photo": "",
               "userId": "user-OiniQO9tsS"
           }
@@ -229,6 +231,34 @@
         message: "Laundry Not Found",
       }
       ```
+- ### Create Service
+  - URL Route:
+    `/service/:id_laundry`
+
+  - Method:
+    POST
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Request Body :
+    - `jenis_service` as `string`
+    - `price` as `integer`
+
+  - Response: 
+    ```
+    {
+        "success": true,
+        "message": "Service created successfully",
+        "service": {
+            "id": 3,
+            "jenis_service": "Cuci",
+            "price": "5000",
+            "userId": "user-o07qirMhHQ",
+            "laundryId": "laundry-y7eXrl9d4E"
+        }
+    }
+    ```
 
 - ### Get All Users
 
@@ -327,7 +357,8 @@
                 "id": "laundry-a0co9b2tqd",
                 "nama_laundry": "Sahabat Laundry",
                 "alamat": "Garut",
-                "jam_operasional": "08.00 - 22.00",
+                "jam_buka": "08.00 - 22.00",
+                "jam_tutup": "08.00 - 22.00",
                 "photo": ""
             },
         ]
@@ -352,7 +383,8 @@
                 "id": "laundry-a0co9b2tqd",
                 "nama_laundry": "Sahabat Laundry",
                 "alamat": "Garut",
-                "jam_operasional": "08.00 - 22.00",
+                "jam_buka": "08.00 - 22.00",
+                "jam_tutup": "08.00 - 22.00",
                 "photo": ""
             },
         ]
@@ -381,7 +413,8 @@
               "alamat": "Garut",
               "latitude": "-7.227906",
               "longitude": "107.908699",
-              "jam_operasional": "08.00 - 22.00",
+              "jam_buka": "08.00 - 22.00",
+              "jam_tutup": "08.00 - 22.00",
               "photo": "",
               "average_rating": 3.42857,
               "reviews": [
@@ -426,7 +459,8 @@
                 "id": "laundry-ew5eNjjB2e",
                 "nama_laundry": "Cuy Laundry",
                 "alamat": "Garut",
-                "jam_operasional": "07.00 - 22.00",
+                "jam_buka": "07.00 - 22.00",
+                "jam_tutup": "07.00 - 22.00",
                 "photo": "https://storage.googleapis.com/image-upload-27/20230523-173656"
             }
         ]
@@ -454,7 +488,8 @@
                 "id": "laundry-bFU4PB2JOt",
                 "nama_laundry": "Sobat Laundry",
                 "alamat": "Garut",
-                "jam_operasional": "07.00 - 22.00",
+                "jam_buka": "07.00 - 22.00",
+                "jam_tutup": "07.00 - 22.00",
                 "photo": "https://storage.googleapis.com/image-upload-27/20230523-143356"
             }
         ]
@@ -532,7 +567,8 @@
                 "id": "laundry-a0co9b2tqd",
                 "nama_laundry": "Sahabat Laundry",
                 "alamat": "Garut",
-                "jam_operasional": "08.00 - 22.00",
+                "jam_buka": "08.00 - 22.00",
+                "jam_tutup": "08.00 - 22.00",
                 "photo": ""
             },
         ]

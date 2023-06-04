@@ -53,6 +53,7 @@ export const createReview = async (req, res) => {
       {
         average_rating: isNaN(averageRating) ? 0 : averageRating,
         average_sentiment: isNaN(averageSentiment) ? 0 : averageSentiment,
+        count_reviews: reviews.length
       },
       { where: { id: laundry.id } }
     );
