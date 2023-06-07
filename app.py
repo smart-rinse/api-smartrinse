@@ -32,6 +32,8 @@ async def root():
 @app.post('/predict')
 async def predict(request: dict):
     text = request.get('text')
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+    text = re.sub(r'[\d]', '', text)
     clean_text = my_pipeline(text)
     loaded_model = load_model('model/model2.h5')
     predictions = loaded_model.predict(clean_text)
