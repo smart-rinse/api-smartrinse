@@ -3,19 +3,20 @@ import db from "../config/database.js";
 import User from "./userModel.js";
 import Laundry from "./laundryModel.js";
 import TransactionService from "./transactionServiceModel.js";
+import { generateTransactionNumber } from "../helper/utils.js";
 
 const { DataTypes } = Sequelize;
 
 const Transaction = db.define("Transaction", {
   id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  transactionNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    primaryKey: true,
+    defaultValue:() => generateTransactionNumber(),
   },
+  // transactionNumber: {
+  //   type: DataTypes.STRING,
+  //   allowNull: false,
+  // },
   transactionDate: {
     type: DataTypes.DATE,
     allowNull: false,

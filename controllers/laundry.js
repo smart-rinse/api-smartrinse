@@ -8,7 +8,7 @@ import Service from "../models/serviceModel.js";
 export const getLaundry = async (req, res) => {
   try {
     const laundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "alamat", "jam_buka", "jam_tutup","photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_buka", "jam_tutup","photo", "average_rating","average_sentiment"],
     });
     res.json({
       success: true,
@@ -24,7 +24,7 @@ export const getLaundry = async (req, res) => {
 export const getLaundryBySentiment = async (req, res) => {
   try {
     const laundry = await Laundry.findAll({
-      attributes: ["id", "nama_laundry", "alamat", "jam_buka", "jam_tutup","photo"],
+      attributes: ["id", "nama_laundry", "alamat", "jam_buka", "jam_tutup","photo","average_rating", "average_sentiment"],
       order: [["average_sentiment", "DESC"]],
       limit: 5,
     });

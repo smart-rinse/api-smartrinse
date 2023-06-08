@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/database.js";
 import router from "./routes/index.js";
-import bodyParser from "body-parser";
 import Users from "./models/userModel.js";
 import Review from "./models/reviewModel.js";
 import Laundry from "./models/laundryModel.js";
@@ -19,6 +18,10 @@ const app = express();
 try {
   await db.authenticate();
   console.log("Database Connected");
+  await Users.sync();
+  await Laundry.sync();
+  await Review.sync();
+  await Favorite.sync();
   await Service.sync();
   await Transaction.sync();
   await TransactionService.sync();

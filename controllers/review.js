@@ -6,12 +6,14 @@ import axios from "axios";
 export const createReview = async (req, res) => {
   const userId = req.user.userId;
   const laundryId = req.params.id;
-  const content = req.body.text;
-  const { rating } = req.body;
+  const { rating, content } = req.body;
 
   try {
-    // Cek apakah Laundry dengan ID tersebut ada
-    const laundry = await Laundry.findByPk(laundryId);
+    const [laundry, user] = await Promise.all([
+      Laundry.findByPk(laundryId),
+      Users.findByPk(userId)
+    ]);
+
     if (!laundry) {
       return res.status(404).json({
         success: false,
@@ -19,7 +21,6 @@ export const createReview = async (req, res) => {
       });
     }
 
-    const user = await Users.findByPk(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -28,27 +29,34 @@ export const createReview = async (req, res) => {
       });
     }
 
-    const response = await axios.post("https://api-smartrinse-ml-fkkhrt32qa-uc.a.run.app/predict", { text: content });
+    const response = await axios.post("http://localhost:8000/predict", { content });
 
-    // Buat review baru dengan data yang diberikan
     const review = await Review.create({
       content,
       rating,
       laundryId,
       userId,
-      sentiment: response.data.Hasil,
+      sentiment: response.data.sentiment,
     });
 
     const reviews = await Review.findAll({ where: { laundryId } });
+
     let totalRating = 0;
     let totalSentiment = 0;
-    reviews.forEach((review) => {
-      totalRating += review.rating;
-      totalSentiment += review.sentiment;
-    });
 
-    const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
-    const averageSentiment = reviews.length > 0 ? totalSentiment / reviews.length : 0;
+    for (const review of reviews) {
+      totalRating += review.rating;
+      if (review.content) {
+        totalSentiment += review.sentiment;
+      }
+    }
+
+    const filteredReviews = reviews.filter(review => review.rating);
+    const filteredSentimentReviews = reviews.filter(review => review.content);
+    
+    const averageRating = filteredReviews.length > 0 ? totalRating / filteredReviews.length : 0;
+    const averageSentiment = filteredSentimentReviews.length > 0 ? totalSentiment / filteredSentimentReviews.length : 0;
+
     await Laundry.update(
       {
         average_rating: isNaN(averageRating) ? 0 : averageRating,
@@ -57,6 +65,7 @@ export const createReview = async (req, res) => {
       },
       { where: { id: laundry.id } }
     );
+
     res.status(201).json({
       success: true,
       message: "Review created successfully",
@@ -66,9 +75,9 @@ export const createReview = async (req, res) => {
         rating: review.rating,
         laundryId: review.laundryId,
         userId: review.userId,
-        // Menambahkan nama pengguna ke respons review
+        photo: user.photo,
         userName: user.name,
-        sentiment: response.data.Hasil,
+        sentiment: review.sentiment
       },
     });
   } catch (error) {

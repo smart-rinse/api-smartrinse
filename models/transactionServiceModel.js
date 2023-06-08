@@ -13,10 +13,10 @@ const TransactionService = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    transactionNumber: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // transactionNumber: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
     serviceId: {
       type: DataTypes.INTEGER,
     },

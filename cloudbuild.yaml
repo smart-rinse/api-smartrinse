@@ -1,8 +1,8 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/submission-mgce-asep/api:0.6", "."]
+    args: ["build", "-t", "gcr.io/smartrinse/api-prod:0.1", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/submission-mgce-asep/api:0.6"]
+    args: ["push", "gcr.io/smartrinse/api-prod:0.1"]
     # Activate Cloud SQL API and Cloud SQL Admin API
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -20,15 +20,15 @@ steps:
         "beta",
         "run",
         "deploy",
-        "api-smartrinse-test",
+        "api-smartrinse",
         "--image",
-        "gcr.io/submission-mgce-asep/api:0.6",
+        "gcr.io/smartrinse/api-prod:0.1",
         "--platform",
         "managed",
         "--region",
-        "us-central1",
+        "asia-souteast2",
         "--add-cloudsql-instances",
-        "submission-mgce-asep:us-central1:cloudrun-sql",
+        "smartrinse:asia-southeast2:smartrinse-sql",
         "--allow-unauthenticated",
         "--vpc-connector=test-connector"
       ]

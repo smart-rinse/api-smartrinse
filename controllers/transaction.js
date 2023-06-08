@@ -3,6 +3,7 @@ import Transaction from "../models/transactionModel.js";
 import TransactionService from "../models/transactionServiceModel.js";
 import {generateTransactionNumber} from "../helper/utils.js"
 import Laundry from "../models/laundryModel.js";
+import Users from "../models/userModel.js";
 
 export const createTransaction = async (req, res) => {
     try {
@@ -27,20 +28,20 @@ export const createTransaction = async (req, res) => {
         })
       );
   
-      const transactionNumber = generateTransactionNumber();
+    //   const transactionNumber = generateTransactionNumber();
   
       const transaction = await Transaction.create({
         userId,
         laundryId,
-        transactionNumber,
-        transactionDate: new Date(),
+        // transactionNumber,
+        transactionDate: new Date().toISOString(),
       });
   
       const transactionServices = await Promise.all(
         services.map((service) =>
           TransactionService.create({
             serviceId: service.id,
-            transactionNumber,
+            // transactionNumber,
             transactionId: transaction.id,
             quantity: service.quantity,
           })
@@ -71,8 +72,14 @@ export const getTransactionById = async (req, res) => {
           {
             model: TransactionService,
             include: [Service],
-          },
-          Laundry,
+          },{
+            model: Laundry,
+            include: [{
+                model: Users,
+                as : 'user',
+                attributes: ["name"],
+            }]
+          }
         ],
       });
   
@@ -91,9 +98,13 @@ export const getTransactionById = async (req, res) => {
         : 0;
   
       const formattedTransaction = {
-        transactionNumber: transaction.transactionNumber,
+        // transactionNumber: transaction.transactionNumber,
+        transactionNumber: transaction.id,
         transactionDate: transaction.transactionDate,
-        placeOfLaundry: transaction.Laundry?.name, // Mengakses nama Laundry
+        nama_laundry: transaction.laundry?.nama_laundry,
+        rekening: transaction.laundry?.rekening,
+        owner: transaction.laundry?.user?.name,
+        pembeli:req.user.name,
         totalCost,
         services: transaction.TransactionServices.map((transactionService) => ({
           serviceName: transactionService.Service.jenis_service,

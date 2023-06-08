@@ -9,7 +9,7 @@ export const getUsers = async (req, res) => {
     const users = await Users.findAll({
       attributes: ["id", "name", "email", "isLaundry"],
     });
-    const user = await Users.findByPk(userId)
+    const user = await Users.findByPk(userId);
     const remainingLaundries = await Laundry.count({ where: { userId } });
     if (remainingLaundries === 0) {
       user.isLaundry = false;
@@ -82,6 +82,14 @@ export const Register = async (req, res) => {
       success: false,
       statusCode: res.statusCode,
       message: "Please complete input data!",
+    });
+  // Validasi email menggunakan regex
+  const emailRegex = /@gmail\.(com|id)$/i; // Memeriksa apakah email berakhir dengan gmail.com atau gmail.id
+  if (!emailRegex.test(email))
+    return res.status(400).json({
+      success: false,
+      statusCode: res.statusCode,
+      message: "Invalid email format!",
     });
   if (user)
     return res.status(400).json({
