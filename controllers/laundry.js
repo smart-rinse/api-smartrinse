@@ -2,7 +2,6 @@ import Users from "../models/userModel.js";
 import Laundry from "../models/laundryModel.js";
 import Review from "../models/reviewModel.js";
 import Sequelize from "sequelize";
-import { Op } from "sequelize";
 import Service from "../models/serviceModel.js";
 
 export const getLaundry = async (req, res) => {
