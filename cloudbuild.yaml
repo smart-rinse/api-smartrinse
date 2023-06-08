@@ -15,7 +15,7 @@ steps:
         "--platform",
         "managed",
         "--region",
-        "asia-souteast2",
+        "asia-southeast2",
         "--add-cloudsql-instances",
         "smartrinse:asia-southeast2:smartrinse-sql",
         "--allow-unauthenticated",
