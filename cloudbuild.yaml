@@ -3,17 +3,6 @@ steps:
     args: ["build", "-t", "gcr.io/smartrinse/api-prod:0.1", "."]
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/smartrinse/api-prod:0.1"]
-    # Activate Cloud SQL API and Cloud SQL Admin API
-  - name: "gcr.io/cloud-builders/gcloud"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        gcloud components install cloud_sql_proxy
-        gcloud services enable sqladmin.googleapis.com
-        gcloud services enable sql-component.googleapis.com
-        
-
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
