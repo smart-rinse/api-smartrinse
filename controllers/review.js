@@ -29,7 +29,7 @@ export const createReview = async (req, res) => {
       });
     }
 
-    const response = await axios.post("http://localhost:8000/predict", { content });
+    const response = await axios.post("https://api-smartrinse-ml-oqy2ejn27a-et.a.run.app/predict", { content });
 
     const review = await Review.create({
       content,
