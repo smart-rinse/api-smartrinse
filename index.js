@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 });
 app.use(router);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 const HOST = "0.0.0.0";
 app.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
