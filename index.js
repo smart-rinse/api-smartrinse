@@ -19,8 +19,7 @@ const app = express();
 try {
   await db.authenticate();
   console.log("Database Connected");
-  await Transaction.sync();
-  await TransactionService.sync();
+  await Owner.sync();
 } catch (error) {
   console.error(error);
 }
