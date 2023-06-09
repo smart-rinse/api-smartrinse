@@ -3,6 +3,7 @@ export const uploadImage = async (req, res) => {
   if (req.file && req.file.cloudStoragePublicUrl) {
     data.imageUrl = req.file.cloudStoragePublicUrl;
   }
+  
   console.log({ data });
   res.send(data);
 };

@@ -1,23 +1,23 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/smartrinse/api-prod:0.2", "."]
+    args: ["build", "-t", "gcr.io/submission-mgce-asep/api-main", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/smartrinse/api-prod:0.2"]
+    args: ["push", "gcr.io/submission-mgce-asep/api-main"]
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
         "beta",
         "run",
         "deploy",
-        "api-smartrinse",
+        "api-smartrinse-test",
         "--image",
-        "gcr.io/smartrinse/api-prod:0.2",
+        "gcr.io/submission-mgce-asep/api-main",
         "--platform",
         "managed",
         "--region",
-        "asia-southeast2",
+        "us-central1",
         "--add-cloudsql-instances",
-        "smartrinse:asia-southeast2:smartrinse-sql",
+        "submission-mgce-asep:us-central1:cloudrun-sql",
         "--allow-unauthenticated",
         "--vpc-connector=test-connector"
       ]

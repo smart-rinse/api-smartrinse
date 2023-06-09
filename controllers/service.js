@@ -28,7 +28,6 @@ export const createService = async (req, res) => {
       userId,
       laundryId,
     });
-
     res.status(201).json({
       success: true,
       message: "Service created successfully",

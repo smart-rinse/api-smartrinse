@@ -13,8 +13,6 @@ export const createFavoriteLaundry = async (req, res) => {
         message: "Laundry Not Found",
       });
     }
-
-    // Cek apakah user sudah memilih laundry ini sebagai favorit sebelumnya
     const existingFavorite = await Favorite.findOne({
       where: { userId, laundryId },
     });
@@ -25,7 +23,6 @@ export const createFavoriteLaundry = async (req, res) => {
         message: "Laundry already chosen as favorite",
       });
     }
-
     await Favorite.create({ userId, laundryId });
     res.json({
       success: true,
@@ -57,7 +54,6 @@ export const getLaundryByFavorite = async (req, res) => {
       jam_tutup,
       photo,
     }));
-
     res.json({
       success: true,
       statusCode: res.statusCode,
@@ -73,7 +69,6 @@ export const removeFavoriteLaundry = async (req, res) => {
     try {
       const  laundryId  = req.params.id;
       const userId = req.user.userId; 
-      // Cek apakah laundry dengan ID yang diberikan ada dalam database
       const laundry = await Laundry.findOne({ where: { id: laundryId } });
       if (!laundry) {
         return res.status(404).json({
@@ -82,7 +77,6 @@ export const removeFavoriteLaundry = async (req, res) => {
           message: 'Laundry not found',
         });
       }
-      // Cek apakah user telah memilih laundry ini sebagai favorit sebelumnya
       const favorite = await Favorite.findOne({ where: { userId, laundryId } });
       if (!favorite) {
         return res.status(404).json({
@@ -91,9 +85,7 @@ export const removeFavoriteLaundry = async (req, res) => {
           message: 'Laundry is not a favorite',
         });
       }
-      // Hapus data favorit dari tabel Favorite
-      await favorite.destroy();
-  
+      await favorite.destroy(); 
       res.json({
         success: true,
         statusCode: res.statusCode,

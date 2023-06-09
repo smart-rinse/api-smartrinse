@@ -142,7 +142,6 @@ export const createLaundry = async (req, res) => {
       statusCode: 201,
       message: "Laundry created successfully",
       laundry,
-      // service
     });
   } catch (error) {
     res.status(500).json({

@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../config/database.js";
 import { nanoid } from "nanoid";
 import Users from "./userModel.js";
+import Owner from "./ownerModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -64,5 +65,15 @@ Users.hasMany(Laundry, {
 Laundry.belongsTo(Users, {
   foreignKey: "userId",
   as: "user",
+});
+
+Owner.hasMany(Laundry, {
+  foreignKey: "ownerId",
+  as: "laundries",
+});
+
+Laundry.belongsTo(Owner, {
+  foreignKey: "ownerId",
+  as: "owner",
 });
 export default Laundry;

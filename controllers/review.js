@@ -7,20 +7,17 @@ export const createReview = async (req, res) => {
   const userId = req.user.userId;
   const laundryId = req.params.id;
   const { rating, content } = req.body;
-
   try {
     const [laundry, user] = await Promise.all([
       Laundry.findByPk(laundryId),
       Users.findByPk(userId)
     ]);
-
     if (!laundry) {
       return res.status(404).json({
         success: false,
         message: "Laundry not found",
       });
     }
-
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -28,9 +25,7 @@ export const createReview = async (req, res) => {
         message: "User not found",
       });
     }
-
     const response = await axios.post("https://api-smartrinse-ml-oqy2ejn27a-et.a.run.app/predict", { content });
-
     const review = await Review.create({
       content,
       rating,
@@ -38,25 +33,19 @@ export const createReview = async (req, res) => {
       userId,
       sentiment: response.data.sentiment,
     });
-
     const reviews = await Review.findAll({ where: { laundryId } });
-
     let totalRating = 0;
     let totalSentiment = 0;
-
     for (const review of reviews) {
       totalRating += review.rating;
       if (review.content) {
         totalSentiment += review.sentiment;
       }
     }
-
     const filteredReviews = reviews.filter(review => review.rating);
     const filteredSentimentReviews = reviews.filter(review => review.content);
-    
     const averageRating = filteredReviews.length > 0 ? totalRating / filteredReviews.length : 0;
     const averageSentiment = filteredSentimentReviews.length > 0 ? totalSentiment / filteredSentimentReviews.length : 0;
-
     await Laundry.update(
       {
         average_rating: isNaN(averageRating) ? 0 : averageRating,
@@ -65,7 +54,6 @@ export const createReview = async (req, res) => {
       },
       { where: { id: laundry.id } }
     );
-
     res.status(201).json({
       success: true,
       message: "Review created successfully",
