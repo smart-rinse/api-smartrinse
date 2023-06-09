@@ -67,13 +67,4 @@ Laundry.belongsTo(Users, {
   as: "user",
 });
 
-Owner.hasMany(Laundry, {
-  foreignKey: "ownerId",
-  as: "laundries",
-});
-
-Laundry.belongsTo(Owner, {
-  foreignKey: "ownerId",
-  as: "owner",
-});
 export default Laundry;

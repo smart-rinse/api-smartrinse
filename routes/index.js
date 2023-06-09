@@ -58,13 +58,13 @@ router.get("/faq", faqApps);
 router.post("/uploadImage", multer.single("image"), imgUpload.uploadToGcs, uploadImage);
 
 //owner
-router.get("/owners", verifyToken, getOwners);
-router.get("/owner/:id", verifyToken, getOwnerById);
-router.post("/owner/register", RegisterOwner);
-router.post("/owner/login", LoginOwner);
-router.get("/token", refreshToken);
-router.delete("/logout", LogoutOwner);
-router.put("/owner/editPassword/:id", verifyToken, changePasswordOwner);
-router.put("/owner/editOwner/:id", verifyToken, multer.single("photo"), imgUpload.uploadToGcs, editOwner);
+// router.get("/owners", verifyToken, getOwners);
+// router.get("/owner/:id", verifyToken, getOwnerById);
+// router.post("/owner/register", RegisterOwner);
+// router.post("/owner/login", LoginOwner);
+// router.get("/token", refreshToken);
+// router.delete("/logout", LogoutOwner);
+// router.put("/owner/editPassword/:id", verifyToken, changePasswordOwner);
+// router.put("/owner/editOwner/:id", verifyToken, multer.single("photo"), imgUpload.uploadToGcs, editOwner);
 
 export default router;
