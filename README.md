@@ -1,4 +1,5 @@
 # Smartrinse-API
+
 # How to Use
 
 - `npm instal`
@@ -17,6 +18,7 @@
     POST
 
   - Request Body:
+
     - `name` as `string`
     - `email` as `string`, must be uniqe
     - `password` as `string`
@@ -37,6 +39,14 @@
           "success": false,
           "statusCode": 400,
           "message": "Please complete input data!"
+      }
+      ```
+    - Status : 400
+      ```
+      {
+          "success": false,
+          "statusCode": 400,
+          "message": "Invalid email format!"
       }
       ```
       ```
@@ -123,6 +133,7 @@
     - `jam_buka` as `string`
     - `jam_tutup` as `string`
     - `photo` as `text`, optional
+    - `rekening` as `int`, optional
 
   - Response:
     - Status : 200
@@ -165,7 +176,9 @@
           "message": "User not found"
       }
       ```
+
 - ### Create Review
+
   - URL Route:
     `/laundry/:id_laundry/review`
 
@@ -173,13 +186,15 @@
     POST
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
   - Request Body :
+
     - `content` as `string`
     - `rating` as `integer`
 
-  - Response: 
+  - Response:
     ```
     {
         "success": true,
@@ -194,7 +209,9 @@
         }
     }
     ```
+
 - ### Create Laundry Favorit
+
   - URL Route:
     `/favorite/:id_laundry`
 
@@ -202,9 +219,10 @@
     POST
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
-  - Response: 
+  - Response:
     - Status: 200
       ```
       {
@@ -229,7 +247,9 @@
         message: "Laundry Not Found",
       }
       ```
+
 - ### Create Service
+
   - URL Route:
     `/service/:id_laundry`
 
@@ -237,13 +257,15 @@
     POST
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
   - Request Body :
+
     - `jenis_service` as `string`
     - `price` as `integer`
 
-  - Response: 
+  - Response:
     ```
     {
         "success": true,
@@ -255,6 +277,42 @@
             "userId": "user-o07qirMhHQ",
             "laundryId": "laundry-y7eXrl9d4E"
         }
+    }
+    ```
+- ### Create Transaction
+
+  - URL Route:
+    `/transaction/:idLaundry`
+
+  - Method:
+    POST
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Request Body :
+    ```
+    {
+      "serviceData": [
+        {
+          "serviceId": "1",
+          "quantity": 1
+        }
+      ]
+    }
+    ```
+
+  - Response:
+    ```
+    {
+      "success": true,
+      "message": "Transaksi berhasil dibuat",
+      "transaction": {
+        "id": "T-765",
+        "userId": "user-bOKX7OpN_T",
+        "laundryId": "laundry-gMheGPrs9J",
+        "transactionDate": "2023-06-10T07:00:50.259Z"
+      }
     }
     ```
 
@@ -362,6 +420,7 @@
         ]
     }
     ```
+
 - ### Get All Laundry By Sentiment
 
   - URL Route:
@@ -415,6 +474,8 @@
               "jam_tutup": "08.00 - 22.00",
               "photo": "",
               "average_rating": 3.42857,
+              "count_reviews": null,
+              "rekening": null,
               "reviews": [
                 {
                 "id": 4,
@@ -425,6 +486,13 @@
                 },
               ]
           }
+          "services": [
+            {
+              "id": 4,
+              "jenis_service": "Cucian",
+              "price": 5000
+            }
+          ]
       }
       ```
     - Status : 404
@@ -435,8 +503,9 @@
          "message": "User not found"
       }
       ```
+
 - ### Fitur Search Laundry
-  
+
   - URL Route:
     `/search`
 
@@ -466,6 +535,7 @@
     ```
 
 - ### Fitur Laundry by Rating
+
   - URL Route:
     `/rating`
 
@@ -493,6 +563,7 @@
         ]
     }
     ```
+
 - ### Article
 
   - URL Route:
@@ -520,6 +591,7 @@
         ]
     }
     ```
+
 - ### FAQ
 
   - URL Route:
@@ -543,6 +615,7 @@
         ]
     }
     ```
+
 - ### Get Laundry Favorite
 
   - URL Route:
@@ -552,6 +625,7 @@
     GET
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
   - Response:
@@ -572,8 +646,76 @@
         ]
     }
     ```
+- ### Get Transaction By User
 
+  - URL Route:
+    `/transaction`
 
+  - Method:
+    GET
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+      "success": true,
+      "statusCode": 200,
+      "message": "Transaksi pengguna berhasil ditemukan",
+      "userTransaction": [
+        {
+          "idTransaction": "T-765",
+          "dateTransaction": "2023-06-10T07:00:50.000Z",
+          "status": "In Progress",
+          "totalCost": 5000
+        },
+        {
+          "idTransaction": "T-829",
+          "dateTransaction": "2023-06-10T03:30:35.000Z",
+          "status": "Selesai",
+          "totalCost": 5000
+        }
+      ]
+    }
+    ```
+- ### Get Detail Transaction
+
+  - URL Route:
+    `/transaction/idTransaction`
+
+  - Method:
+    GET
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+      "success": true,
+      "message": "Transaksi berhasil ditemukan",
+      "transaction": {
+        "transactionNumber": "T-765",
+        "transactionDate": "2023-06-10T07:00:50.000Z",
+        "nama_laundry": "Abah Laundry",
+        "rekening": null,
+        "owner": "Agus",
+        "pembeli": "awan",
+        "totalCost": 5000,
+        "status": "In Progress",
+        "services": [
+          {
+            "serviceName": "Cucian",
+            "quantity": 1,
+            "price": 5000
+          }
+        ]
+      }
+    }
+    ```
 
 - ### Refresh Token
 
@@ -642,6 +784,7 @@
     PUT
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
   - Request Body: - `telephone` as `string` - `gender` as `string` - `city` as `string`
@@ -684,6 +827,7 @@
         "message": "Logout success"
     }
     ```
+
 - ### Remove Laundry Favorite
 
   - URL Route:
@@ -693,6 +837,7 @@
     DELETE
 
   - Headers:
+
     - `Authorization` : `Bearer <token>`
 
   - Response:
@@ -719,4 +864,3 @@
         message: 'Laundry is not a favorite',
       }
       ```
-
