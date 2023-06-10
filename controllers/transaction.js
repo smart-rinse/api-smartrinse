@@ -31,6 +31,7 @@ export const createTransaction = async (req, res) => {
       userId,
       laundryId,
       transactionDate: new Date().toISOString(),
+      status: "In Progress",
     });
 
     const transactionServices = await Promise.all(
@@ -96,6 +97,7 @@ export const getTransactionById = async (req, res) => {
       rekening: transaction.laundry?.rekening,
       owner: transaction.laundry?.user?.name,
       pembeli: req.user.name,
+      status: transaction.status,
       totalCost,
       services: transaction.TransactionServices.map((transactionService) => ({
         serviceName: transactionService.Service.jenis_service,
@@ -160,6 +162,7 @@ export const getTransactionByUser = async (req, res) => {
       return {
         idTransaction: transaction.id,
         dateTransaction: transaction.transactionDate,
+        status: transaction.status,
         totalCost: totalCost,
       };
     });

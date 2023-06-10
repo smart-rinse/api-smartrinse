@@ -1,8 +1,8 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/submission-mgce-asep/api-main1", "."]
+    args: ["build", "-t", "gcr.io/submission-mgce-asep/api-main2", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/submission-mgce-asep/api-main1"]
+    args: ["push", "gcr.io/submission-mgce-asep/api-main2"]
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
@@ -11,7 +11,7 @@ steps:
         "deploy",
         "api-smartrinse-test",
         "--image",
-        "gcr.io/submission-mgce-asep/api-main1",
+        "gcr.io/submission-mgce-asep/api-main2",
         "--platform",
         "managed",
         "--region",
