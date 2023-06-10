@@ -128,7 +128,7 @@ export const getTransactionByUser = async (req, res) => {
       include: [
         {
           model: Transaction,
-          attributes: ["id", "transactionDate"],
+          attributes: ["id", "transactionDate", "status"],
           include: [
             {
               model: Laundry,

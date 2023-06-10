@@ -4,8 +4,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/database.js";
 import router from "./routes/index.js";
-import Transaction from "./models/transactionModel.js";
-import TransactionService from "./models/transactionServiceModel.js";
 
 dotenv.config();
 const app = express();
@@ -13,8 +11,6 @@ const app = express();
 try {
   await db.authenticate();
   console.log("Database Connected");
-  await Transaction.sync();
-  await TransactionService.sync();
 } catch (error) {
   console.error(error);
 }
