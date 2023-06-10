@@ -3,7 +3,6 @@ import Transaction from "../models/transactionModel.js";
 import TransactionService from "../models/transactionServiceModel.js";
 import Laundry from "../models/laundryModel.js";
 import Users from "../models/userModel.js";
-import moment from 'moment-timezone';
 
 export const createTransaction = async (req, res) => {
   try {
@@ -31,7 +30,7 @@ export const createTransaction = async (req, res) => {
     const transaction = await Transaction.create({
       userId,
       laundryId,
-      transactionDate:  moment().tz('Asia/Jakarta').toDate(),
+      transactionDate: new Date(),
       status: "In Progress",
     });
 
@@ -149,7 +148,6 @@ export const getTransactionByUser = async (req, res) => {
           order: [["transactionDate", "DESC"]],
         },
       ],
-
     });
 
     if (!user) {
@@ -159,7 +157,9 @@ export const getTransactionByUser = async (req, res) => {
       });
     }
 
-    const userTransaction = user.Transactions.map((transaction) => {
+    const userTransaction = user.Transactions.sort((a, b) => {
+      return new Date(b.transactionDate) - new Date(a.transactionDate);
+    }).map((transaction) => {
       const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
 
       return {
