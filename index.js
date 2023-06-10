@@ -4,14 +4,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import db from "./config/database.js";
 import router from "./routes/index.js";
-import Owner from "./models/ownerModel.js";
-import Laundry from "./models/laundryModel.js";
-import Users from "./models/userModel.js";
-import Service from "./models/serviceModel.js";
-import Review from "./models/reviewModel.js";
-import Favorite from "./models/favoriteModel.js";
-import Transaction from "./models/transactionModel.js";
-import TransactionService from "./models/transactionServiceModel.js";
 
 dotenv.config();
 const app = express();
@@ -19,14 +11,6 @@ const app = express();
 try {
   await db.authenticate();
   console.log("Database Connected");
-  await Owner.sync();
-  await Users.sync();
-  await Laundry.sync();
-  await Service.sync()
-  await Review.sync()
-  await Favorite.sync()
-  await Transaction.sync()
-  await TransactionService.sync()
 } catch (error) {
   console.error(error);
 }
