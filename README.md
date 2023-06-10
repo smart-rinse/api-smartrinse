@@ -3,8 +3,8 @@
 
 - `npm instal`
 - `npm run dev`
-- Local Host: Run with node js, local IP and Port:8080
-  `http://localhost:8080/`
+- Local Host: Run with node js, local IP and Port:8000
+  `http://localhost:8000/`
 
 # Endpoint Route
 
@@ -257,6 +257,106 @@
         }
     }
     ```
+- ### Create Transaction
+  - URL Route:
+    `/transaction/:id_laundry`
+
+  - Method:
+    POST
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Request Body :
+    ```
+    {
+      "serviceData": [
+        {
+          "serviceId": "1",
+          "quantity": 2
+        }
+      ]
+    }
+    ```
+  - Response: 
+    ```
+    {
+      "success": true,
+      "message": "Transaksi berhasil dibuat",
+      "transaction": {
+        "id": "T-6",
+        "userId": "user-0L3EQKQS4C",
+        "laundryId": "laundry-6XDAOkk7RK",
+        "transactionDate": "2023-06-10T07:22:52.906Z"
+      }
+    }
+    ```
+
+- ### Get TransactionById (Detail Transaction)
+
+  - URL Route:
+    `/transaction/:idTransaction`
+
+  - Method:
+    GET
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+      "success": true,
+      "message": "Transaksi berhasil ditemukan",
+      "transaction": {
+        "transactionNumber": "T-6",
+        "transactionDate": "2023-06-10T07:22:52.000Z",
+        "nama_laundry": "Ngelondri Kuy",
+        "rekening": null,
+        "owner": "Pengguna 2",
+        "pembeli": "aba",
+        "totalCost": 20000,
+        "services": [
+          {
+            "serviceName": "Cuci Kiloan",
+            "quantity": 2,
+            "price": 10000
+          }
+        ]
+      }
+    }
+    ```
+- ### Get TransactionByUser
+
+  - URL Route:
+    `/transaction/`
+
+  - Method:
+    GET
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+      "success": true,
+      "statusCode": 200,
+      "message": "Transaksi pengguna berhasil ditemukan",
+      "userTransaction": [
+        {
+          "idTransaction": "T-6",
+          "dateTransaction": "2023-06-10T07:22:52.000Z",
+          "totalCost": 20000
+        },
+        {
+          "idTransaction": "T-823",
+          "dateTransaction": "2023-06-09T15:21:26.000Z",
+          "totalCost": 20000
+        }
+      ]
+    }
+    ```
 
 - ### Get All Users
 
@@ -342,7 +442,7 @@
     `/laundry/`
 
   - Method:
-    GET
+    GET   
 
   - Response:
     ```
