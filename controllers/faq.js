@@ -45,6 +45,6 @@ export const faqApps = async (req, res) => {
             faq
           });
     } catch (error) {
-        
+        console.log(error);
     }
 }

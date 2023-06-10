@@ -1,129 +1,298 @@
 import Service from "../models/serviceModel.js";
 import Transaction from "../models/transactionModel.js";
 import TransactionService from "../models/transactionServiceModel.js";
-import {generateTransactionNumber} from "../helper/utils.js"
 import Laundry from "../models/laundryModel.js";
 import Users from "../models/userModel.js";
+import Owner from "../models/ownerModel.js";
 
 export const createTransaction = async (req, res) => {
-    try {
-      const userId = req.user.userId;
-      const laundryId = req.params.id;
-      const serviceData = req.body.serviceData;
-  
-      if (!serviceData || !serviceData.length) {
-        return res.status(400).json({
-          success: false,
-          message: 'Data service tidak valid',
-        });
-      }
-  
-      const services = await Promise.all(
-        serviceData.map(async (data) => {
-          const service = await Service.findByPk(data.serviceId);
-          return {
-            ...service.toJSON(),
-            quantity: data.quantity || 1, // Jika tidak ada quantity yang dikirimkan, gunakan default 1
-          };
-        })
-      );
-  
-    //   const transactionNumber = generateTransactionNumber();
-  
-      const transaction = await Transaction.create({
-        userId,
-        laundryId,
-        // transactionNumber,
-        transactionDate: new Date().toISOString(),
-      });
-  
-      const transactionServices = await Promise.all(
-        services.map((service) =>
-          TransactionService.create({
-            serviceId: service.id,
-            // transactionNumber,
-            transactionId: transaction.id,
-            quantity: service.quantity,
-          })
-        )
-      );
-  
-      res.status(201).json({
-        success: true,
-        message: 'Transaksi berhasil dibuat',
-        transaction,
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({
+  try {
+    const userId = req.user.userId;
+    const laundryId = req.params.id;
+    const serviceData = req.body.serviceData;
+
+    if (!serviceData || !serviceData.length) {
+      return res.status(400).json({
         success: false,
-        message: 'Terjadi kesalahan pada server',
+        message: "Data service tidak valid",
       });
     }
-  };
-  
+    const services = [];
+    const errors = [];
+    await Promise.all(serviceData.map(async (data) => {
+      const service = await Service.findByPk(data.serviceId);
+      if (!service || service.laundryId !== laundryId) {
+        errors.push({ serviceId: data.serviceId, message: "Service not valid or does not belong to the laundry" });
+      } else {
+        services.push({ ...service.toJSON(), quantity: data.quantity || 1 });
+      }
+    }));
+    
+    if (errors.length > 0) {
+      return res.status(400).json({ success: false, message: "Validation errors", errors });
+    }
+
+    const transaction = await Transaction.create({
+      userId,
+      laundryId,
+      transactionDate: new Date().toISOString(),
+      status:"In Progress"
+    });
+
+    await Promise.all(services.map((service) =>
+      TransactionService.create({
+        serviceId: service.id,
+        transactionId: transaction.id,
+        quantity: service.quantity,
+      })
+    ));
+
+    res.status(201).json({
+      success: true,
+      message: "Transaksi berhasil dibuat",
+      transaction,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
 
 export const getTransactionById = async (req, res) => {
-    try {
-      const { id } = req.params;
-  
-      const transaction = await Transaction.findByPk(id, {
-        include: [
-          {
-            model: TransactionService,
-            include: [Service],
-          },{
-            model: Laundry,
-            include: [{
-                model: Users,
-                as : 'user',
-                attributes: ["name"],
-            }]
-          }
-        ],
-      });
-  
-      if (!transaction) {
-        return res.status(404).json({
-          success: false,
-          message: 'Transaksi tidak ditemukan',
-        });
-      }
-  
-      const totalCost = transaction.TransactionServices.length > 0
-        ? transaction.TransactionServices.reduce((total, transactionService) =>
-            total + transactionService.Service.price * transactionService.quantity,
-            0
-          )
-        : 0;
-  
-      const formattedTransaction = {
-        // transactionNumber: transaction.transactionNumber,
-        transactionNumber: transaction.id,
-        transactionDate: transaction.transactionDate,
-        nama_laundry: transaction.laundry?.nama_laundry,
-        rekening: transaction.laundry?.rekening,
-        owner: transaction.laundry?.user?.name,
-        pembeli:req.user.name,
-        totalCost,
-        services: transaction.TransactionServices.map((transactionService) => ({
-          serviceName: transactionService.Service.jenis_service,
-          quantity: transactionService.quantity,
-          price: transactionService.Service.price,
-        })),
-      };
-  
-      return res.json({
-        success: true,
-        message: 'Transaksi berhasil ditemukan',
-        transaction: formattedTransaction,
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
+  try {
+    const { id } = req.params;
+
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: TransactionService,
+          include: [Service],
+        },
+        {
+          model: Laundry,
+          include: [
+            {
+              model: Users,
+              as: "user",
+              attributes: ["name"],
+            },
+            {
+              model: Owner,
+              as: "owner",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
         success: false,
-        message: 'Terjadi kesalahan pada server',
+        message: "Transaksi tidak ditemukan",
       });
     }
-  };
-  
+
+    const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
+
+    const formattedTransaction = {
+      transactionNumber: transaction.id,
+      transactionDate: transaction.transactionDate,
+      nama_laundry: transaction.laundry?.nama_laundry,
+      rekening: transaction.laundry?.rekening,
+      owner: transaction.laundry?.owner?.name,
+      pembeli: req.user.name,
+      totalCost,
+      status: transaction.status ,
+      services: transaction.TransactionServices.map((transactionService) => ({
+        serviceName: transactionService.Service.jenis_service,
+        quantity: transactionService.quantity,
+        price: transactionService.Service.price,
+      })),
+    };
+
+    return res.json({
+      success: true,
+      message: "Transaksi berhasil ditemukan",
+      transaction: formattedTransaction,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const getTransactionByUser = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const user = await Users.findByPk(userId, {
+      include: [
+        {
+          model: Transaction,
+          attributes: ["id", "transactionDate", "status"],
+          include: [
+            {
+              model: Laundry,
+              include: [
+                {
+                  model: Users,
+                  as: "user",
+                  attributes: ["name"],
+                },
+              ],
+            },
+            {
+              model: TransactionService,
+              include: [Service],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Pengguna tidak ditemukan",
+      });
+    }
+
+    const userTransaction = user.Transactions.map((transaction) => {
+      const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
+
+      return {
+        idTransaction: transaction.id,
+        dateTransaction: transaction.transactionDate,
+        status: transaction.status,
+        totalCost: totalCost,
+      };
+    });
+
+    res.json({
+      success: true,
+      statusCode: res.statusCode,
+      message: "Transaksi pengguna berhasil ditemukan",
+      userTransaction,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const getOrdersByOwner = async (req, res) => {
+  const ownerId = req.owner.ownerId;
+
+  try {
+    const owner = await Owner.findByPk(ownerId, {
+      include: [
+        {
+          model: Laundry,
+          as:'laundryOwner',
+          include: [
+            {
+              model: Transaction,
+              attributes: ["id", "transactionDate", "status"], // Menambahkan atribut "status"
+              include: [
+                {
+                  model: Users,
+                  as: "user",
+                  attributes: ["name"],
+                },
+                {
+                  model: TransactionService,
+                  include: [Service],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!owner) {
+      return res.status(404).json({
+        success: false,
+        message: "Pemilik usaha tidak ditemukan",
+      });
+    }
+
+    const orders = owner.laundryOwner.map((laundry) =>
+      laundry.Transactions.map((transaction) => {
+        const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
+
+        return {
+          idTransaction: transaction.id,
+          dateTransaction: transaction.transactionDate,
+          totalCost: totalCost,
+          status: transaction.status, // Menambahkan status pesanan
+          user: transaction.user.name
+        };
+      })
+    );
+
+    res.json({
+      success: true,
+      statusCode: res.statusCode,
+      message: "Pesanan berhasil ditemukan",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const updateTransactionStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // const { status } = req.body;
+
+    // Periksa apakah status yang diberikan valid
+    // if (status !== 'Selesai' && status !== 'In Progress') {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Status transaksi tidak valid',
+    //   });
+    // }
+
+    const transaction = await Transaction.findByPk(id);
+
+    // Periksa apakah transaksi ditemukan
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: 'Transaksi tidak ditemukan',
+      });
+    }
+
+    // Perbarui status transaksi
+    transaction.status = "Selesai";
+    await transaction.save();
+
+    res.json({
+      success: true,
+      message: 'Status transaksi berhasil diperbarui',
+      transaction,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan pada server',
+    });
+  }
+};

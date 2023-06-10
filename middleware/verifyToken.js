@@ -8,6 +8,7 @@ export const verifyToken = (req, res, next) => {
         if(e) return res.sendStatus(403);
         req.email = decoded.email;
         req.user = decoded;
+        req.owner = decoded
         next();
     })
 }

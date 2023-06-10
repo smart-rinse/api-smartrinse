@@ -7,12 +7,12 @@ const pathKey = path.resolve("./imgUpload.json");
 
 // TODO: Sesuaikan konfigurasi Storage
 const gcs = new Storage({
-  projectId: "submission-mgce-asep",
+  projectId: "smartrinse",
   keyFilename: pathKey,
 });
 
 // TODO: Tambahkan nama bucket yang digunakan
-const bucketName = "image-upload-27";
+const bucketName = "assets-sr";
 const bucket = gcs.bucket(bucketName);
 
 function getPublicUrl(filename) {
@@ -22,9 +22,17 @@ function getPublicUrl(filename) {
 let ImgUpload = {};
 
 ImgUpload.uploadToGcs = (req, res, next) => {
+  
   if (!req.file) return next();
 
-  const gcsname = dateFormat(new Date(), "yyyymmdd-HHMMss");
+  const folder = req.body.folder; 
+  const user = req.body.user
+  const owner = req.body.owner
+  const upload = user || owner  
+  
+  const timestamp = dateFormat(new Date(), "yyyymmdd-HHMMss");
+  const filename = `${timestamp}-${upload}`;
+  const gcsname = folder + "/" + filename;
   const file = bucket.file(gcsname);
 
   const stream = file.createWriteStream({

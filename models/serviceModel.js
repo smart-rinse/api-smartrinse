@@ -5,6 +5,7 @@ import Users from "./userModel.js";
 import Laundry from "./laundryModel.js";
 import Transaction from "./transactionModel.js";
 import TransactionService from "./transactionServiceModel.js";
+import Owner from "./ownerModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -31,8 +32,8 @@ const Service = db.define(
   }
 );
 
-Service.belongsTo(Users, { foreignKey: "userId" });
-Users.hasMany(Service, { foreignKey: "userId" });
+Service.belongsTo(Owner, { foreignKey: "ownerId" });
+Users.hasMany(Service, { foreignKey: "ownerId" });
 
 Service.belongsTo(Laundry, { foreignKey: "laundryId" });
 Laundry.hasMany(Service, { foreignKey: "laundryId" });

@@ -1,9 +1,9 @@
 import Laundry from "../models/laundryModel.js";
+import Owner from "../models/ownerModel.js";
 import Service from "../models/serviceModel.js";
-import Users from "../models/userModel.js";
 
 export const createService = async (req, res) => {
-  const userId = req.user.userId;
+  const ownerId = req.owner.ownerId;
   const laundryId = req.params.id;
   const { jenis_service, price } = req.body;
   try {
@@ -14,21 +14,26 @@ export const createService = async (req, res) => {
         message: "Laundry not found",
       });
     }
-    const user = await Users.findByPk(userId);
-    if (!user) {
+    const owner = await Owner.findByPk(ownerId);
+    if (!owner) {
       return res.status(404).json({
         success: false,
         statusCode: 404,
         message: "User not found",
       });
     }
+    if (laundry.ownerId !== ownerId) {
+      return res.status(403).json({
+        success: false,
+        message: "Owner does not have access to this laundry",
+      });
+    }
     const service = await Service.create({
       jenis_service,
       price,
-      userId,
+      ownerId,
       laundryId,
     });
-
     res.status(201).json({
       success: true,
       message: "Service created successfully",

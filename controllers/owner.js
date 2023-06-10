@@ -1,25 +1,25 @@
-import Users from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Laundry from "../models/laundryModel.js";
+import Owner from "../models/ownerModel.js";
 
-export const getUsers = async (req, res) => {
-  const userId = req.user.userId;
+export const getOwners = async (req, res) => {
+  const ownerId = req.owner.ownerId;
   try {
-    const users = await Users.findAll({
+    const owners = await Owner.findAll({
       attributes: ["id", "name", "email", "isLaundry"],
     });
-    const user = await Users.findByPk(userId);
-    const remainingLaundries = await Laundry.count({ where: { userId } });
+    const owner = await Owner.findByPk(ownerId);
+    const remainingLaundries = await Laundry.count({ where: { ownerId } });
     if (remainingLaundries === 0) {
-      user.isLaundry = false;
-      await user.save();
+      owner.isLaundry = false;
+      await owner.save();
     }
     res.json({
       success: true,
       statusCode: res.statusCode,
-      message: "Users fetched successfully",
-      users,
+      message: "Owner fetched successfully",
+      owners,
     });
   } catch (error) {
     res.json({
@@ -34,28 +34,28 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
-  const userId = req.params.id;
+export const getOwnerById = async (req, res) => {
+  const ownerId = req.params.id;
   try {
-    const user = await Users.findByPk(userId, {
+    const owner = await Owner.findByPk(ownerId, {
       attributes: ["id", "name", "email", "telephone", "gender", "city", "isLaundry", "photo"],
     });
-    const remainingLaundries = await Laundry.count({ where: { userId } });
+    const remainingLaundries = await Laundry.count({ where: { ownerId } });
     if (remainingLaundries === 0) {
-      user.isLaundry = false;
-      await user.save();
+      owner.isLaundry = false;
+      await owner.save();
     }
-    if (!user)
+    if (!owner)
       return res.status(404).json({
         success: false,
         statusCode: res.statusCode,
-        message: "User not found",
+        message: "Owner not found",
       });
     res.json({
       success: true,
       statusCode: res.statusCode,
-      message: "Users fetched successfully",
-      user,
+      message: "Owner fetched successfully",
+      owner,
     });
   } catch (error) {
     res.json({
@@ -70,9 +70,9 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const Register = async (req, res) => {
+export const RegisterOwner = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
-  const user = await Users.findOne({
+  const owner = await Owner.findOne({
     where: {
       email: email,
     },
@@ -90,7 +90,7 @@ export const Register = async (req, res) => {
       statusCode: res.statusCode,
       message: "Invalid email format!",
     });
-  if (user)
+  if (owner)
     return res.status(400).json({
       success: false,
       statusCode: res.statusCode,
@@ -105,7 +105,7 @@ export const Register = async (req, res) => {
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
   try {
-    await Users.create({
+    await Owner.create({
       name: name,
       email: email,
       password: hashPassword,
@@ -113,7 +113,7 @@ export const Register = async (req, res) => {
     res.json({
       success: true,
       statusCode: res.statusCode,
-      message: "User Created",
+      message: "Owner Created",
     });
   } catch (error) {
     res.json({
@@ -128,32 +128,32 @@ export const Register = async (req, res) => {
   }
 };
 
-export const Login = async (req, res) => {
+export const LoginOwner = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await Users.findAll({
+    const owner = await Owner.findAll({
       where: {
         email: email,
       },
     });
-    const match = await bcrypt.compare(password, user[0].password);
+    const match = await bcrypt.compare(password, owner[0].password);
     if (!match)
       return res.status(400).json({
         success: false,
         statusCode: res.statusCode,
         message: "Password Wrong!",
       });
-    const userId = user[0].id;
-    const isLaundry = user[0].isLaundry;
-    const name = user[0].name;
-    const emailId = user[0].email;
-    const accessToken = jwt.sign({ userId, name, emailId }, process.env.ACCESS_TOKEN_SECRET);
-    const refreshToken = jwt.sign({ userId, name, emailId }, process.env.REFRESH_TOKEN_SECRET);
-    await Users.update(
+    const ownerId = owner[0].id;
+    const isLaundry = owner[0].isLaundry;
+    const name = owner[0].name;
+    const emailId = owner[0].email;
+    const accessToken = jwt.sign({ ownerId, name, emailId }, process.env.ACCESS_TOKEN_SECRET);
+    const refreshToken = jwt.sign({ ownerId, name, emailId }, process.env.REFRESH_TOKEN_SECRET);
+    await Owner.update(
       { refresh_token: refreshToken },
       {
         where: {
-          id: userId,
+          id: ownerId,
         },
       }
     );
@@ -166,7 +166,7 @@ export const Login = async (req, res) => {
       statusCode: res.statusCode,
       message: "success",
       data: {
-        userId,
+        ownerId,
         isLaundry,
         name,
         email,
@@ -185,21 +185,21 @@ export const Login = async (req, res) => {
   }
 };
 
-export const Logout = async (req, res) => {
+export const LogoutOwner = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(204);
-  const user = await Users.findAll({
+  const owner = await Owner.findAll({
     where: {
       refresh_token: refreshToken,
     },
   });
-  if (!user[0]) return res.sendStatus(204);
-  const userId = user[0].id;
-  await Users.update(
+  if (!owner[0]) return res.sendStatus(204);
+  const ownerId = owner[0].id;
+  await Owner.update(
     { refresh_token: null },
     {
       where: {
-        id: userId,
+        id: ownerId,
       },
     }
   );
@@ -211,20 +211,20 @@ export const Logout = async (req, res) => {
   });
 };
 
-export const changePassword = async (req, res) => {
+export const changePasswordOwner = async (req, res) => {
   const { id } = req.params;
   const { currentPassword, newPassword, confirmPassword } = req.body;
 
   try {
-    const user = await Users.findByPk(id);
-    if (!user) {
+    const owner = await Owner.findByPk(id);
+    if (!owner) {
       return res.status(404).json({
         success: false,
         statusCode: res.statusCode,
-        message: "User not found",
+        message: "Owner not found",
       });
     }
-    const match = await bcrypt.compare(currentPassword, user.password);
+    const match = await bcrypt.compare(currentPassword, owner.password);
     if (!match) {
       return res.status(400).json({
         success: false,
@@ -241,7 +241,7 @@ export const changePassword = async (req, res) => {
     }
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(newPassword, salt);
-    await user.update({
+    await owner.update({
       password: hashPassword,
     });
     res.json({
@@ -262,7 +262,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
-export const editUser = async (req, res) => {
+export const editOwner = async (req, res) => {
   const { id } = req.params;
   const { telephone, gender, city } = req.body;
   let imageUrl = "";
@@ -270,15 +270,15 @@ export const editUser = async (req, res) => {
     imageUrl = req.file.cloudStoragePublicUrl;
   }
   try {
-    const user = await Users.findByPk(id);
-    if (!user) {
+    const owner = await Owner.findByPk(id);
+    if (!owner) {
       return res.status(404).json({
         success: false,
         statusCode: res.statusCode,
-        message: "User not found",
+        message: "Owner not found",
       });
     }
-    await user.update({
+    await owner.update({
       telephone,
       gender,
       city,

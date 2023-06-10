@@ -13,13 +13,12 @@ const Transaction = db.define("Transaction", {
     primaryKey: true,
     defaultValue:() => generateTransactionNumber(),
   },
-  // transactionNumber: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false,
-  // },
   transactionDate: {
     type: DataTypes.DATE,
     allowNull: false,
+  },
+  status: {
+    type: DataTypes.STRING,
   },
 },
 {
