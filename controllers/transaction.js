@@ -94,6 +94,7 @@ export const getTransactionById = async (req, res) => {
       transactionNumber: transaction.id,
       transactionDate: transaction.transactionDate,
       nama_laundry: transaction.laundry?.nama_laundry,
+      idlaundry: transaction.laundry?.id,
       rekening: transaction.laundry?.rekening,
       owner: transaction.laundry?.user?.name,
       pembeli: req.user.name,
@@ -104,6 +105,7 @@ export const getTransactionById = async (req, res) => {
         quantity: transactionService.quantity,
         price: transactionService.Service.price,
       })),
+      isReviewed: false
     };
 
     return res.json({
