@@ -21,7 +21,7 @@ const Transaction = db.define("Transaction", {
     type: DataTypes.STRING,
   },
   isReviewed: {
-    type: DataTypes.STRING,
+    type: DataTypes.BOOLEAN,
   },
 },
 {
