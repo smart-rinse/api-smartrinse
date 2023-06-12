@@ -96,6 +96,7 @@ export const getTransactionById = async (req, res) => {
       nama_laundry: transaction.laundry?.nama_laundry,
       idlaundry: transaction.laundry?.id,
       rekening: transaction.laundry?.rekening,
+      bank: transaction.laundry?.bank,
       owner: transaction.laundry?.user?.name,
       pembeli: req.user.name,
       status: transaction.status,
@@ -105,7 +106,7 @@ export const getTransactionById = async (req, res) => {
         quantity: transactionService.quantity,
         price: transactionService.Service.price,
       })),
-      isReviewed: false
+      isReviewed: false,
     };
 
     return res.json({
@@ -177,6 +178,71 @@ export const getTransactionByUser = async (req, res) => {
       statusCode: res.statusCode,
       message: "Transaksi pengguna berhasil ditemukan",
       userTransaction,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const editTransactionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: TransactionService,
+          include: [Service],
+        },
+        {
+          model: Laundry,
+          include: [
+            {
+              model: Users,
+              as: "user",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "Transaksi tidak ditemukan",
+      });
+    }
+
+    const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
+
+    const formattedTransaction = {
+      transactionNumber: transaction.id,
+      transactionDate: transaction.transactionDate,
+      nama_laundry: transaction.laundry?.nama_laundry,
+      idlaundry: transaction.laundry?.id,
+      rekening: transaction.laundry?.rekening,
+      bank: transaction.laundry?.bank,
+      owner: transaction.laundry?.user?.name,
+      pembeli: req.user.name,
+      status: transaction.status,
+      totalCost,
+      services: transaction.TransactionServices.map((transactionService) => ({
+        serviceName: transactionService.Service.jenis_service,
+        quantity: transactionService.quantity,
+        price: transactionService.Service.price,
+      })),
+      isReviewed: true,
+    };
+
+    return res.json({
+      success: true,
+      message: "Transaksi berhasil ditemukan",
+      transaction: formattedTransaction,
     });
   } catch (error) {
     console.log(error);

@@ -8,10 +8,7 @@ export const createReview = async (req, res) => {
   const laundryId = req.params.id;
   const { rating, content } = req.body;
   try {
-    const [laundry, user] = await Promise.all([
-      Laundry.findByPk(laundryId),
-      Users.findByPk(userId)
-    ]);
+    const [laundry, user] = await Promise.all([Laundry.findByPk(laundryId), Users.findByPk(userId)]);
     if (!laundry) {
       return res.status(404).json({
         success: false,
@@ -42,15 +39,15 @@ export const createReview = async (req, res) => {
         totalSentiment += review.sentiment;
       }
     }
-    const filteredReviews = reviews.filter(review => review.rating);
-    const filteredSentimentReviews = reviews.filter(review => review.content);
+    const filteredReviews = reviews.filter((review) => review.rating);
+    const filteredSentimentReviews = reviews.filter((review) => review.content);
     const averageRating = filteredReviews.length > 0 ? totalRating / filteredReviews.length : 0;
     const averageSentiment = filteredSentimentReviews.length > 0 ? totalSentiment / filteredSentimentReviews.length : 0;
     await Laundry.update(
       {
         average_rating: isNaN(averageRating) ? 0 : averageRating,
         average_sentiment: isNaN(averageSentiment) ? 0 : averageSentiment,
-        count_reviews: reviews.length
+        count_reviews: reviews.length,
       },
       { where: { id: laundry.id } }
     );
@@ -65,7 +62,7 @@ export const createReview = async (req, res) => {
         userId: review.userId,
         photo: user.photo,
         userName: user.name,
-        sentiment: review.sentiment
+        sentiment: review.sentiment,
       },
     });
   } catch (error) {

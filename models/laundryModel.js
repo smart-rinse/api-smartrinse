@@ -50,6 +50,9 @@ const Laundry = db.define(
     rekening: {
       type: DataTypes.INTEGER,
     },
+    bank: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "laundry",

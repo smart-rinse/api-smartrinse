@@ -98,7 +98,7 @@ export const getLaundryById = async (req, res) => {
 
 export const createLaundry = async (req, res) => {
   const userId = req.user.userId;
-  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening} = req.body;
+  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening, bank} = req.body;
   let imageUrl = "";
 
   if (req.file && req.file.cloudStoragePublicUrl) {
@@ -130,6 +130,7 @@ export const createLaundry = async (req, res) => {
       jam_buka,
       jam_tutup,
       rekening,
+      bank,
       photo: imageUrl,
       userId,
     });

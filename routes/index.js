@@ -11,7 +11,7 @@ import { createReview } from "../controllers/review.js";
 import { faqApps } from "../controllers/faq.js";
 import { createFavoriteLaundry, getLaundryByFavorite, removeFavoriteLaundry } from "../controllers/favorite.js";
 import { createService } from "../controllers/service.js";
-import { createTransaction, getTransactionById, getTransactionByUser } from "../controllers/transaction.js";
+import { createTransaction, editTransactionById, getTransactionById, getTransactionByUser } from "../controllers/transaction.js";
 import { setFolderLaundry, setFolderOwner, setFolderUser } from "../middleware/folderMiddleware.js";
 import { LoginOwner, LogoutOwner, RegisterOwner, changePasswordOwner, editOwner, getOwnerById, getOwners } from "../controllers/owner.js";
 
@@ -51,6 +51,7 @@ router.delete("/favorite/delete/:id", verifyToken, removeFavoriteLaundry);
 //Transaction
 router.post("/transaction/:id", verifyToken, createTransaction);
 router.get("/transaction/:id", verifyToken, getTransactionById);
+router.put("/transaction/:id", verifyToken, editTransactionById);
 router.get("/transaction", verifyToken, getTransactionByUser);
 
 router.get("/article", getArticle);
