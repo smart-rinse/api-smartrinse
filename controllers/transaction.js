@@ -32,6 +32,7 @@ export const createTransaction = async (req, res) => {
       laundryId,
       transactionDate: new Date(),
       status: "In Progress",
+      isReviewed: false,
     });
 
     const transactionServices = await Promise.all(
@@ -106,7 +107,7 @@ export const getTransactionById = async (req, res) => {
         quantity: transactionService.quantity,
         price: transactionService.Service.price,
       })),
-      isReviewed: false,
+      isReviewed: transaction.isReviewed,
     };
 
     return res.json({
@@ -218,6 +219,9 @@ export const editTransactionById = async (req, res) => {
       });
     }
 
+    transaction.isReviewed = true;
+    await transaction.save();
+
     const totalCost = transaction.TransactionServices.length > 0 ? transaction.TransactionServices.reduce((total, transactionService) => total + transactionService.Service.price * transactionService.quantity, 0) : 0;
 
     const formattedTransaction = {
@@ -236,7 +240,7 @@ export const editTransactionById = async (req, res) => {
         quantity: transactionService.quantity,
         price: transactionService.Service.price,
       })),
-      isReviewed: true,
+      isReviewed: transaction.isReviewed,
     };
 
     return res.json({

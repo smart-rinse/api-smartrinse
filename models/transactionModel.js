@@ -19,7 +19,10 @@ const Transaction = db.define("Transaction", {
   },
   status: {
     type: DataTypes.STRING,
-  }
+  },
+  isReviewed: {
+    type: DataTypes.STRING,
+  },
 },
 {
   freezeTableName: true,
