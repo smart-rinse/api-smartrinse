@@ -19,11 +19,13 @@ const Transaction = db.define("Transaction", {
   },
   status: {
     type: DataTypes.STRING,
+  },  
+  isReviewed: {
+    type: DataTypes.BOOLEAN,
   },
 },
 {
   freezeTableName: true,
-  timestamps: false,
 });
 
 Transaction.belongsTo(User, { foreignKey: "userId" });

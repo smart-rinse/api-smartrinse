@@ -5,13 +5,11 @@ import path from "path";
 
 const pathKey = path.resolve("./imgUpload.json");
 
-// TODO: Sesuaikan konfigurasi Storage
 const gcs = new Storage({
   projectId: "smartrinse",
   keyFilename: pathKey,
 });
 
-// TODO: Tambahkan nama bucket yang digunakan
 const bucketName = "assets-sr";
 const bucket = gcs.bucket(bucketName);
 

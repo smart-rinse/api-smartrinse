@@ -1,9 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
-import { nanoid } from "nanoid";
 import Users from "./userModel.js";
 import Laundry from "./laundryModel.js";
-import Transaction from "./transactionModel.js";
 import TransactionService from "./transactionServiceModel.js";
 import Owner from "./ownerModel.js";
 

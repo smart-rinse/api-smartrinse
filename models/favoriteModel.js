@@ -1,10 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
-import { nanoid } from "nanoid";
 import Users from "./userModel.js";
 import Laundry from "./laundryModel.js";
-
-
 
 const { DataTypes } = Sequelize
 
@@ -16,7 +13,6 @@ const Favorite = db.define('Favorite', {
   },
 });
 
-// Definisikan relasi antara model Favorite dengan model User dan Laundry
 Favorite.belongsTo(Users, { foreignKey: 'userId' });
 Users.hasMany(Favorite, { foreignKey: 'userId' });
 

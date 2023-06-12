@@ -43,7 +43,7 @@ export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {
     const laundry = await Laundry.findByPk(laundryId, {
-      attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_buka", "jam_tutup", "photo", "average_rating", "count_reviews", "rekening"],
+      attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_buka", "jam_tutup", "photo", "average_rating", "count_reviews", "rekening", "bank"],
       include: [
         {
           model: Review,
@@ -99,7 +99,7 @@ export const getLaundryById = async (req, res) => {
 
 export const createLaundry = async (req, res) => {
   const ownerId = req.owner.ownerId;
-  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening } = req.body;
+  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening, bank } = req.body;
   let imageUrl = "";
 
   if (req.file && req.file.cloudStoragePublicUrl) {
@@ -119,7 +119,7 @@ export const createLaundry = async (req, res) => {
       return res.status(404).json({
         success: false,
         statusCode: 404,
-        message: "User not found",
+        message: "Owner not found",
       });
     }
     const laundry = await Laundry.create({
@@ -131,6 +131,7 @@ export const createLaundry = async (req, res) => {
       jam_buka,
       jam_tutup,
       rekening,
+      bank,
       photo: imageUrl,
       ownerId,
     });

@@ -11,7 +11,7 @@ import { createReview } from "../controllers/review.js";
 import { faqApps } from "../controllers/faq.js";
 import { createFavoriteLaundry, getLaundryByFavorite, removeFavoriteLaundry } from "../controllers/favorite.js";
 import { createService } from "../controllers/service.js";
-import { createTransaction, getOrdersByOwner, getTransactionById, getTransactionByUser, updateTransactionStatus } from "../controllers/transaction.js";
+import { createTransaction, editTransactionById, getOrdersByOwner, getTransactionById, getTransactionByUser, updateTransactionStatus } from "../controllers/transaction.js";
 import { setFolderLaundry, setFolderOwner, setFolderUser } from "../middleware/folderMiddleware.js";
 import { LoginOwner, LogoutOwner, RegisterOwner, changePasswordOwner, editOwner, getOwnerById, getOwners } from "../controllers/owner.js";
 
@@ -53,11 +53,8 @@ router.post("/transaction/:id", verifyToken, createTransaction);
 router.get("/transaction/:id", verifyToken, getTransactionById);
 router.get("/transaction", verifyToken, getTransactionByUser);
 router.get("/owner/transaction", verifyToken, getOrdersByOwner);
-router.post("/owner/status/:id", verifyToken, updateTransactionStatus)
-
-router.get("/article", getArticle);
-router.get("/faq", faqApps);
-router.post("/uploadImage", multer.single("image"), imgUpload.uploadToGcs, uploadImage);
+router.put("/transaction/:id", verifyToken, editTransactionById);
+router.put("/owner/status/:id", verifyToken, updateTransactionStatus)
 
 //owner
 router.get("/owners", verifyToken, getOwners);
@@ -68,5 +65,10 @@ router.get("/token", refreshToken);
 router.delete("/logout", LogoutOwner);
 router.put("/owner/editPassword/:id", verifyToken, changePasswordOwner);
 router.put("/owner/editOwner/:id", verifyToken, multer.single("photo"), setFolderOwner, imgUpload.uploadToGcs, editOwner);
+
+//Article, FAQ
+router.get("/article", getArticle);
+router.get("/faq", faqApps);
+router.post("/uploadImage", multer.single("image"), imgUpload.uploadToGcs, uploadImage);
 
 export default router;
