@@ -43,7 +43,7 @@ export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {
     const laundry = await Laundry.findByPk(laundryId, {
-      attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_buka", "jam_tutup", "photo", "average_rating", "count_reviews", "rekening", "bank"],
+      attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_buka", "jam_tutup", "photo", "average_rating", "count_reviews", "rekening", "bank", "telephone"],
       include: [
         {
           model: Review,
@@ -99,14 +99,14 @@ export const getLaundryById = async (req, res) => {
 
 export const createLaundry = async (req, res) => {
   const ownerId = req.owner.ownerId;
-  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening, bank } = req.body;
+  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening, bank, telephone } = req.body;
   let imageUrl = "";
 
   if (req.file && req.file.cloudStoragePublicUrl) {
     imageUrl = req.file.cloudStoragePublicUrl;
   }
 
-  if ((!nama_laundry || !tanggal_berdiri || !alamat || !latitude || !longitude || !jam_buka, !jam_tutup))
+  if ((!nama_laundry || !tanggal_berdiri || !alamat || !latitude || !longitude || !jam_buka || !jam_tutup || !telephone))
     return res.status(400).json({
       success: false,
       statusCode: res.statusCode,
@@ -132,6 +132,7 @@ export const createLaundry = async (req, res) => {
       jam_tutup,
       rekening,
       bank,
+      telephone,
       photo: imageUrl,
       ownerId,
     });

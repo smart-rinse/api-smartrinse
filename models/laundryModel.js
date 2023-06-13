@@ -53,6 +53,9 @@ const Laundry = db.define(
     bank: {
       type: DataTypes.STRING,
     },
+    telephone: {
+      type: DataTypes.STRING,
+    },
   },
   {
     tableName: "laundry",
