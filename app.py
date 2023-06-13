@@ -7,6 +7,8 @@ import os
 import re
 from transformers import TFBertModel
 import numpy as np
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 
 from fastapi.middleware.cors import CORSMiddleware
 
