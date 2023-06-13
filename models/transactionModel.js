@@ -26,6 +26,7 @@ const Transaction = db.define("Transaction", {
 },
 {
   freezeTableName: true,
+  timestamps: false,
 });
 
 Transaction.belongsTo(User, { foreignKey: "userId" });
