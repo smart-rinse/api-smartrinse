@@ -3,6 +3,5 @@ uvicorn==0.14.0
 tensorflow
 gunicorn==20.1.0
 transformers
-urllib3
 numpy
 requests
