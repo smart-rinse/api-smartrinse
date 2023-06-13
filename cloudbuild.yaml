@@ -1,0 +1,20 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/smartrinse/prod-ml:0.1", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/smartrinse/prod-ml:0.1"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "api-ml",
+        "--image",
+        "gcr.io/smartrinse/prod-ml:0.1",
+        "--platform",
+        "managed",
+        "--region",
+        "asia-southeast2",
+        "--allow-unauthenticated",
+      ]
