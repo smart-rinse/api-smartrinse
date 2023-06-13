@@ -5,6 +5,8 @@ from tensorflow.keras.models import load_model
 import pickle
 import os
 import re
+from transformers import TFBertModel
+import numpy as np
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -24,18 +26,21 @@ loaded_model = None
 
 def load_resources():
     global tokenizer, loaded_model
-    with open('test/tokenizer1.pkl', 'rb') as f:
+    with open('tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    loaded_model = load_model('test/model4.h5')
+    loaded_model = load_model('modelfix.h5',custom_objects={'TFBertModel':TFBertModel})
 
 @app.on_event("startup")
 async def startup_event():
     load_resources()
 
-def preprocess_text(text):
-    X = tokenizer.texts_to_sequences([text])
-    X = pad_sequences(X, maxlen=100, padding='post')
-    return X
+def preprocess_text(tokenizer, reviews, max_length):
+    token_ids = np.zeros(shape=(len(reviews), max_length), dtype=np.int32)
+    for i, review in enumerate(reviews):
+        encoded = tokenizer.encode(review, max_length=max_length, truncation=True, padding='max_length')
+        token_ids[i] = encoded
+    attention_mask = (token_ids != 0).astype(np.int32)
+    return {'input_ids': token_ids, 'attention_mask': attention_mask}
 
 @app.get("/")
 async def root():
@@ -44,9 +49,12 @@ async def root():
 @app.post('/predict')
 async def predict(request: dict):
     text = request.get('content')
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+    text = re.sub(r'[\d]', '', text)
     if not text or text.strip() == '':
         return {"sentiment": 0}
-    clean_text = preprocess_text(text)
+    clean_text = preprocess_text(tokenizer,[text],75)
     predictions = loaded_model.predict(clean_text)
     probability = max(predictions.tolist()[0])
     return {

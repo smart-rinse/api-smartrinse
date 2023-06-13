@@ -1,8 +1,8 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/smartrinse/prod-ml:0.2", "."]
+    args: ["build", "-t", "gcr.io/smartrinse/prod-ml:0.3", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/smartrinse/prod-ml:0.2"]
+    args: ["push", "gcr.io/smartrinse/prod-ml:0.3"]
   - name: "gcr.io/cloud-builders/gcloud"
     args:
       [
@@ -11,7 +11,7 @@ steps:
         "deploy",
         "api-ml",
         "--image",
-        "gcr.io/smartrinse/prod-ml:0.2",
+        "gcr.io/smartrinse/prod-ml:0.3",
         "--platform",
         "managed",
         "--region",
