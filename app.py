@@ -30,7 +30,7 @@ def load_resources():
     global tokenizer, loaded_model
     with open('test/tokenizer1.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    loaded_model = load_model('test/model4.h5',custom_objects={'TFBertModel':TFBertModel})
+    loaded_model = load_model('test/model4.h5')
 
 @app.on_event("startup")
 async def startup_event():
