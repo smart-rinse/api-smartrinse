@@ -83,7 +83,7 @@ export const Register = async (req, res) => {
       statusCode: res.statusCode,
       message: "Please complete input data!",
     });
-  const emailRegex = /@gmail\.(com|id)$/i; 
+  const emailRegex = /@gmail\.(com|id)$/i;
   if (!emailRegex.test(email))
     return res.status(400).json({
       success: false,

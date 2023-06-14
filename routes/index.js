@@ -2,7 +2,7 @@ import express from "express";
 import { Register, getUsers, Login, Logout, getUserById, changePassword, editUser } from "../controllers/users.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/refreshToken.js";
-import { createLaundry, getLaundry, getLaundryById, searchLaundry, filterLaundryByRating, getLaundryBySentiment, getLaundryByOwner } from "../controllers/laundry.js";
+import { createLaundry, getLaundry, getLaundryById, searchLaundry, filterLaundryByRating, getLaundryBySentiment, getLaundryByOwner, editLaundry } from "../controllers/laundry.js";
 import { getArticle } from "../controllers/articles.js";
 import { uploadImage } from "../controllers/uploadImage.js";
 import Multer from "multer";
@@ -10,7 +10,7 @@ import imgUpload from "../helper/imgUpload.js";
 import { createReview } from "../controllers/review.js";
 import { faqApps } from "../controllers/faq.js";
 import { createFavoriteLaundry, getLaundryByFavorite, removeFavoriteLaundry } from "../controllers/favorite.js";
-import { createService } from "../controllers/service.js";
+import { createService, deleteService, editService, getAllService } from "../controllers/service.js";
 import { createTransaction, editTransactionById, getOrdersByOwner, getTransactionById, getTransactionByUser, updateTransactionStatus } from "../controllers/transaction.js";
 import { setFolderLaundry, setFolderOwner, setFolderUser } from "../middleware/folderMiddleware.js";
 import { LoginOwner, LogoutOwner, RegisterOwner, changePasswordOwner, editOwner, getOwnerById, getOwners } from "../controllers/owner.js";
@@ -37,11 +37,17 @@ router.delete("/logout", Logout);
 router.get("/laundry", getLaundry);
 router.get("/laundry/sentiment", getLaundryBySentiment);
 router.get("/laundry/:id", getLaundryById);
+router.put("/laundry/:id", verifyToken, multer.single("photo"), setFolderLaundry, imgUpload.uploadToGcs, editLaundry);
 router.post("/laundry/create", verifyToken, multer.single("photo"), setFolderLaundry, imgUpload.uploadToGcs, createLaundry);
-router.post("/service/:id", verifyToken, createService);
 router.post("/laundry/:id/review", verifyToken, createReview);
 router.get("/search", searchLaundry);
 router.get("/rating", filterLaundryByRating);
+
+//Service
+router.post("/service/:id", verifyToken, createService);
+router.get("/service/:id", verifyToken, getAllService);
+router.put("/service/:id", verifyToken, editService);
+router.delete("/service/:id", verifyToken, deleteService);
 
 //Favorite
 router.post("/favorite/:id", verifyToken, createFavoriteLaundry);

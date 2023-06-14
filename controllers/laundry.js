@@ -269,3 +269,61 @@ export const filterLaundryByRating = async (req, res) => {
     });
   }
 };
+
+export const editLaundry = async (req, res) => {
+  const ownerId = req.owner.ownerId
+  const { id } = req.params;
+  const { nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, rekening, bank, telephone } = req.body;
+  let imageUrl = "";
+
+  if (req.file && req.file.cloudStoragePublicUrl) {
+    imageUrl = req.file.cloudStoragePublicUrl;
+  }
+
+  try {
+    const laundry = await Laundry.findByPk(id);
+
+    if (!laundry) {
+      return res.status(404).json({
+        status: false,
+        statusCode: res.statusCode,
+        message: "Laundry Not Found",
+      });
+    }
+    if (laundry.ownerId !== ownerId) {
+      return res.status(403).json({
+        success: false,
+        message: "Owner does not have access to this laundry",
+      });
+    }
+    await laundry.update({
+      nama_laundry,
+      tanggal_berdiri,
+      alamat,
+      latitude,
+      longitude,
+      jam_buka,
+      jam_tutup,
+      rekening,
+      bank,
+      telephone,
+      photo: imageUrl,
+    });
+    res.json({
+      success: true,
+      statusCode: res.statusCode,
+      message: "Success",
+      laundry
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      statusCode: res.statusCode,
+      error: {
+        message: error.message,
+        uri: req.originalUrl,
+      },
+    });
+  }
+}
