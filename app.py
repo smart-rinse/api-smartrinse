@@ -4,8 +4,6 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 import pickle
 import os
-import re
-import numpy as np
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -33,13 +31,10 @@ def load_resources():
 async def startup_event():
     load_resources()
 
-def preprocess_text(tokenizer, reviews, max_length):
-    token_ids = np.zeros(shape=(len(reviews), max_length), dtype=np.int32)
-    for i, review in enumerate(reviews):
-        encoded = tokenizer.encode(review, max_length=max_length, truncation=True, padding='max_length')
-        token_ids[i] = encoded
-    attention_mask = (token_ids != 0).astype(np.int32)
-    return {'input_ids': token_ids, 'attention_mask': attention_mask}
+def preprocess_text(text):
+    X = tokenizer.texts_to_sequences([text])
+    X = pad_sequences(X, maxlen=100, padding='post')
+    return X
 
 @app.get("/")
 async def root():
@@ -48,12 +43,9 @@ async def root():
 @app.post('/predict')
 async def predict(request: dict):
     text = request.get('content')
-    text = text.lower()
-    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
-    text = re.sub(r'[\d]', '', text)
     if not text or text.strip() == '':
         return {"sentiment": 0}
-    clean_text = preprocess_text(tokenizer,[text],75)
+    clean_text = preprocess_text(text)
     predictions = loaded_model.predict(clean_text)
     probability = max(predictions.tolist()[0])
     return {
