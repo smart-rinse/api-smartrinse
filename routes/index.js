@@ -60,7 +60,7 @@ router.put("/owner/status/:id", verifyToken, updateTransactionStatus)
 router.get("/owners", verifyToken, getOwners);
 router.get("/owner/:id", verifyToken, getOwnerById);
 router.get("/token", refreshToken);
-router.get("/owner/laundry/", verifyToken,getLaundryByOwner);
+router.get("/owner/get/laundry", verifyToken,getLaundryByOwner);
 router.post("/owner/register", RegisterOwner);
 router.post("/owner/login", LoginOwner);
 router.delete("/logout", LogoutOwner);
