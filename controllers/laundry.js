@@ -39,6 +39,61 @@ export const getLaundryBySentiment = async (req, res) => {
   }
 };
 
+export const getLaundryByOwner = async (req, res) => {
+  const ownerId = req.owner.ownerId;
+
+  try {
+    const owner = await Owner.findByPk(ownerId, {
+      include: [
+        {
+          model: Laundry,
+          as : "laundryOwner",
+          attributes: ["id", "nama_laundry", "tanggal_berdiri", "alamat", "latitude", "longitude", "jam_buka", "jam_tutup", "photo", "average_rating", "count_reviews", "rekening", "bank", "telephone"],
+        }
+      ]
+    });
+
+    if (!owner) {
+      return res.status(404).json({
+        success: false,
+        message: "Owner tidak ditemukan",
+      });
+    }
+
+    const laundry = owner.laundryOwner
+    const formattedOwner = laundry.map(({ id, nama_laundry, tanggal_berdiri, alamat, latitude, longitude, jam_buka, jam_tutup, photo, average_rating, count_reviews, rekening, bank, telephone }) => {
+      return {
+        id,
+        nama_laundry,
+        tanggal_berdiri,
+        alamat,
+        latitude,
+        longitude,
+        jam_buka,
+        jam_tutup,
+        photo,
+        average_rating,
+        count_reviews,
+        rekening,
+        bank,
+        telephone,
+      };
+    });
+
+    return res.json({
+      success: true,
+      message: "Laundry ditemukan",
+      data: formattedOwner,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+}
+
 export const getLaundryById = async (req, res) => {
   const laundryId = req.params.id;
   try {

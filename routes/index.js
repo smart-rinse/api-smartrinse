@@ -2,7 +2,7 @@ import express from "express";
 import { Register, getUsers, Login, Logout, getUserById, changePassword, editUser } from "../controllers/users.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/refreshToken.js";
-import { createLaundry, getLaundry, getLaundryById, searchLaundry, filterLaundryByRating, getLaundryBySentiment } from "../controllers/laundry.js";
+import { createLaundry, getLaundry, getLaundryById, searchLaundry, filterLaundryByRating, getLaundryBySentiment, getLaundryByOwner } from "../controllers/laundry.js";
 import { getArticle } from "../controllers/articles.js";
 import { uploadImage } from "../controllers/uploadImage.js";
 import Multer from "multer";
@@ -59,9 +59,10 @@ router.put("/owner/status/:id", verifyToken, updateTransactionStatus)
 //owner
 router.get("/owners", verifyToken, getOwners);
 router.get("/owner/:id", verifyToken, getOwnerById);
+router.get("/token", refreshToken);
+router.get("/owner/laundry/", verifyToken,getLaundryByOwner);
 router.post("/owner/register", RegisterOwner);
 router.post("/owner/login", LoginOwner);
-router.get("/token", refreshToken);
 router.delete("/logout", LogoutOwner);
 router.put("/owner/editPassword/:id", verifyToken, changePasswordOwner);
 router.put("/owner/editOwner/:id", verifyToken, multer.single("photo"), setFolderOwner, imgUpload.uploadToGcs, editOwner);
