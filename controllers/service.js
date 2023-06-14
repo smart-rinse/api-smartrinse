@@ -125,7 +125,7 @@ export const getAllService = async (req, res) => {
     const laundry = await Laundry.findByPk(idLaundry, {
       include: {
         model: Service,
-        attributes: ['jenis_service', 'price'],
+        attributes: ['id','jenis_service', 'price'],
       },
     });
 
@@ -144,7 +144,8 @@ export const getAllService = async (req, res) => {
     }
 
     const services = laundry.Services;
-    const formattedServices = services.map(({ jenis_service, price }) => ({
+    const formattedServices = services.map(({ id, jenis_service, price }) => ({
+      id,
       jenis_service,
       price,
     }));
