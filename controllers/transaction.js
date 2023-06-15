@@ -106,6 +106,7 @@ export const getTransactionById = async (req, res) => {
       transactionNumber: transaction.id,
       transactionDate: transaction.transactionDate,
       nama_laundry: transaction.laundry?.nama_laundry,
+      idlaundry: transaction.laundry?.id,
       rekening: transaction.laundry?.rekening,
       bank: transaction.laundry?.bank,
       owner: transaction.laundry?.owner?.name,
