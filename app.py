@@ -4,11 +4,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 import pickle
 import os
-
+import re
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,15 +16,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load tokenizer and model once during app startup
 tokenizer = None
 loaded_model = None
 
 def load_resources():
     global tokenizer, loaded_model
-    with open('test/tokenizer1.pkl', 'rb') as f:
+    with open('model/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    loaded_model = load_model('test/model4.h5')
+    loaded_model = load_model('model/model.h5')
 
 @app.on_event("startup")
 async def startup_event():
@@ -43,6 +41,9 @@ async def root():
 @app.post('/predict')
 async def predict(request: dict):
     text = request.get('content')
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+    text = re.sub(r'[\d]', '', text)
     if not text or text.strip() == '':
         return {"sentiment": 0}
     clean_text = preprocess_text(text)
@@ -52,6 +53,5 @@ async def predict(request: dict):
         "content": text,
         "sentiment": probability,
     }
-
 if __name__ == '__main__':
      uvicorn.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
