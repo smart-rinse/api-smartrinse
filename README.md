@@ -1,10 +1,10 @@
 # Cloud Computing
 
 ## Introduction
-<h5>Welcome to this documentation 👋</h5>
+****Welcome to this documentation 👋****
 You can visit the link below directly to view the SmartRinse API documentation.
-  - Link REST API = https://github.com/smart-rinse/api-smartrinse/tree/api-v2 
-  - Link ML API = https://github.com/smart-rinse/api-smartrinse/tree/api-prod-ml
+- Link REST API = https://github.com/smart-rinse/api-smartrinse/tree/api-v2 
+- Link ML API = https://github.com/smart-rinse/api-smartrinse/tree/api-prod-ml
 
 ## Architecture
 ![alt text](https://github.com/smart-rinse/api-smartrinse/blob/cloud-computing/img/arsitektur-cloud.jpeg?raw=true)
