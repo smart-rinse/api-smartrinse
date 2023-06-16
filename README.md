@@ -1,11 +1,12 @@
 # Cloud Computing
-# Introduction
-<h1>Welcome to this documentation 👋</h1>
-You can visit the link below directly to view the SmartRinse API documentation.
-  - <h3> Link REST API = https://github.com/smart-rinse/api-smartrinse/tree/api-v2 </h3>
-  - <h3> Link ML API = https://github.com/smart-rinse/api-smartrinse/tree/api-prod-ml </h3>
 
-# Architecture
+## Introduction
+<h3>Welcome to this documentation 👋</h3>
+You can visit the link below directly to view the SmartRinse API documentation.
+- ### Link REST API = https://github.com/smart-rinse/api-smartrinse/tree/api-v2 
+- ### Link ML API = https://github.com/smart-rinse/api-smartrinse/tree/api-prod-ml
+
+## Architecture
 ![alt text](https://github.com/smart-rinse/api-smartrinse/blob/cloud-computing/img/arsitektur-cloud.jpeg?raw=true)
 Our application's cloud infrastructure consists of two APIs.
 The first API serves as the core API for our machine learning (ML) models. This API is accessible to Node.js through Axios, enabling seamless integration of the ML models with the main API.
@@ -13,13 +14,13 @@ The second API is the main API designed specifically for Android applications. T
 Having these two APIs allows us to separate the ML functionality from the main API, ensuring ease of maintenance and separate development. 
 Furthermore, it provides flexibility for our users, allowing them to utilize the services provided by our cloud infrastructure through either Node.js or Android applications.
 
-# Service & Framework
+## Service & Framework
 <p align="center">
   <img src="https://github.com/smart-rinse/api-smartrinse/blob/cloud-computing/img/Service.jpeg?raw=true" alt="Service Image">
 </p>
 For data services, we use Cloud Storage and Cloud SQL to store and manage files and databases. For deployment, we rely on Cloud Run, Container Registry, and Cloud Build to create a scalable and efficient deployment environment. On the network services side, we utilize Serverless VPC Connector and Secret Manager. Ultimately, we leverage Express Node.js, Axios, and FastAPI to build a robust and efficient REST API.
 
-# Deploying to Cloud Run
+## Deploying to Cloud Run
 - ### Preconditions
   Before deploying your app to Google Cloud Run, ensure that you meet the following prerequisites:
   - Create a Google Cloud Platform (GCP) account and manage projects.
