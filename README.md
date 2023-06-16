@@ -4,8 +4,8 @@
 
 - `npm instal`
 - `npm run dev`
-- Local Host: Run with node js, local IP and Port:8080
-  `http://localhost:8080/`
+- Local Host: Run with node js, local IP and Port:8000
+  `http://localhost:8000/`
 
 # Endpoint Route
 
