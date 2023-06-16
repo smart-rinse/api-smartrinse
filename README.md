@@ -1,18 +1,21 @@
 # Smartrinse-API
 
-# How to Use
+# Description
+This RESTful API utilizes the Express framework from Node.js, renowned for its capability to construct scalable and efficient web-based applications. With Express, defining routes, handling HTTP requests, and managing API responses becomes effortless. Moreover, this framework offers flexibility in implementing middleware to enable additional functionalities like authentication, authorization, and data validation. Strong community support and comprehensive documentation contribute to Express being a popular and dependable choice for developing RESTful APIs.
 
-- `npm instal`
+# How to Use
+- `npm install`
 - `npm run dev`
-- Local Host: Run with node js, local IP and Port:8000
-  `http://localhost:8000/`
+- Local Host: Run with node js, local IP and Port:8080
+  `http://localhost:8080/`
 
 # Endpoint Route
 
 - ### Register
 
   - URL Route:
-    `/register/`
+    `/register/` for users
+    `/owner/register/` for owners
 
   - Method:
     POST
@@ -67,7 +70,8 @@
 - ### Login
 
   - URL Route:
-    `/login/`
+    `/login/` for users
+    `/owner/login/` for owners
 
   - Method:
     POST
@@ -132,8 +136,10 @@
     - `logitude` as `string`
     - `jam_buka` as `string`
     - `jam_tutup` as `string`
+    - `telephone` as `string`
     - `photo` as `text`, optional
     - `rekening` as `int`, optional
+    - `bank` as `string`, optional
 
   - Response:
     - Status : 200
@@ -151,8 +157,11 @@
               "longitude": "-17.321",
               "jam_buka": "08.00 - 22.00",
               "jam_tutup": "08.00 - 22.00",
+              "rekening" : "3242144",
+              "bank": "Mandiri"
+              "telephone": "62894837435",
               "photo": "",
-              "userId": "user-OiniQO9tsS"
+              "ownerId": "Mandiri"
           }
       }
       ```
@@ -205,7 +214,8 @@
             "rating": "1",
             "laundryId": "laundry-ew5eNjjB2e",
             "userId": "user-5_3ucWmYxd",
-            "userName": "Pengguna 2"
+            "userName": "Pengguna 2",
+            "sentiment": 0.9998858571052551
         }
     }
     ```
@@ -274,11 +284,12 @@
             "id": 3,
             "jenis_service": "Cuci",
             "price": "5000",
-            "userId": "user-o07qirMhHQ",
+            "ownerId": "user-o07qirMhHQ",
             "laundryId": "laundry-y7eXrl9d4E"
         }
     }
     ```
+
 - ### Create Transaction
 
   - URL Route:
@@ -311,7 +322,9 @@
         "id": "T-765",
         "userId": "user-bOKX7OpN_T",
         "laundryId": "laundry-gMheGPrs9J",
-        "transactionDate": "2023-06-10T07:00:50.259Z"
+        "transactionDate": "2023-06-10T07:00:50.259Z",
+        "status": "In Progress",
+        "isReviewed": false
       }
     }
     ```
@@ -325,7 +338,6 @@
     GET
 
   - Headers:
-
     - `Authorization` : `Bearer <token>`
 
   - Response:
@@ -341,6 +353,38 @@
                   "name": "Pengguna 1",
                   "email": "pengguna1@gmail.com",
                   "isLaundry": true
+              },
+          ]
+      }
+      ```
+    - Status : 401
+      ```
+      Unauthorized
+      ```
+- ### Get All Owner
+
+  - URL Route:
+    `/owners/`
+
+  - Method:
+    GET
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    - Status : 200
+      ```
+      {
+          "success": true,
+          "statusCode": 200,
+          "message": "Users fetched successfully",
+          "users": [
+              {
+                "id": "owner-0J3Rn7jnOX",
+                "name": "Owner 3",
+                "email": "owner3@gmail.com",
+                "isLaundry": true
               },
           ]
       }
@@ -394,6 +438,50 @@
       }
       ```
 
+- ### Get Owner By Id
+
+  - URL Route:
+    `/owner/:id`
+
+  - Method:
+    GET
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    - Status : 200
+      ```
+      {
+          "success": true,
+          "statusCode": 200,
+          "message": "Users fetched successfully",
+          "user": {
+              "id": "owner-0J3Rn7jnOX",
+              "name": "Owner 1",
+              "email": "owner@gmail.com",
+              "telephone": null,
+              "gender": null,
+              "city": null,
+              "isLaundry": true,
+              "photo": ""
+          }
+      }
+      ```
+    - Status : 401
+      ```
+      Unauthorized
+      ```
+    - Status : 404
+      ```
+      {
+         "success": false,
+         "statusCode": 404,
+         "message": "User not found"
+      }
+      ```
+
 - ### Get All Laundry
 
   - URL Route:
@@ -415,7 +503,9 @@
                 "alamat": "Garut",
                 "jam_buka": "08.00 - 22.00",
                 "jam_tutup": "08.00 - 22.00",
-                "photo": ""
+                "photo": "",
+                "average_rating": null,
+                "average_sentiment": null
             },
         ]
     }
@@ -448,6 +538,32 @@
     }
     ```
 
+- ### Get All Service
+
+  - URL Route:
+    `/service/idLaundry`
+
+  - Method:
+    GET
+
+  - Headers:
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "message": "Data layanan ditemukan",
+        "data": [
+            {
+                "id": 18,
+                "jenis_service": "Cuci Lipat Setrika",
+                "price": 10000
+            },
+        ]
+    }
+    ```
+
 - ### Detail Laundry
 
   - URL Route:
@@ -475,7 +591,9 @@
               "photo": "",
               "average_rating": 3.42857,
               "count_reviews": null,
-              "rekening": null,
+              "rekening": 7777,
+              "bank": "mandiri",
+              "telephone": "08898979",
               "reviews": [
                 {
                 "id": 4,
@@ -701,7 +819,9 @@
         "transactionNumber": "T-765",
         "transactionDate": "2023-06-10T07:00:50.000Z",
         "nama_laundry": "Abah Laundry",
+        "idlaundry": "laundry-gMheGPrs9J",
         "rekening": null,
+        "bank": "Mandiri",
         "owner": "Agus",
         "pembeli": "awan",
         "totalCost": 5000,
@@ -716,6 +836,40 @@
       }
     }
     ```
+
+- ### Get Transaction By Owner
+
+  - URL Route:
+    `/owner/transaction`
+
+  - Method:
+    GET
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "statusCode": 200,
+        "message": "Pesanan berhasil ditemukan",
+        "orders": [
+            [
+                {
+                    "idTransaction": "T-322",
+                    "dateTransaction": "2023-06-10T12:52:18.000Z",
+                    "totalCost": 20000,
+                    "status": "Selesai",
+                    "user": "Acep"
+                },
+            ],
+        ]
+    }
+    ```
+
+
 
 - ### Refresh Token
 
@@ -732,10 +886,11 @@
     }
     ```
 
-- ### Edit Password User
+- ### Edit Password User & Owner
 
   - URL Route:
-    `/editPassword/:id`
+    `/editPassword/:id` for User
+    `/owner/editPassword/:id` for Owner
 
   - Method:
     PUT
@@ -775,10 +930,11 @@
       Unauthorized
       ```
 
-- ### Edit Data User
+- ### Edit Data User & Owner
 
   - URL Route:
     `/editUser/:id`
+    `/owner/editOwner/:id`
 
   - Method:
     PUT
@@ -810,6 +966,150 @@
          "message": "User not found"
       }
       ```
+
+- ### Edit Status Laundry
+
+  - URL Route:
+    `/owner/status/idTransaction`
+
+  - Method:
+    PUT
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    - Status : 200
+      ```
+      {
+          "success": true,
+          "message": "Status transaksi berhasil diperbarui",
+          "transaction": {
+              "id": "T-322",
+              "transactionDate": "2023-06-10T12:52:18.000Z",
+              "status": "Selesai",
+              "isReviewed": true,
+              "userId": "user-bOKX7OpN_T",
+              "laundryId": "laundry-gMheGPrs9J"
+          }
+      }
+      ```
+    - Status : 401
+      ```
+      Unauthorized
+      ```
+    - Status : 404
+      ```
+      {
+         "success": false,
+         "statusCode": 404,
+         "message": "Transaksi tidak ditemukan"
+      }
+      ```
+
+- ### Edit Laundry
+
+  - URL Route:
+    `/laundry/idLaundry`
+
+  - Method:
+    PUT
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Request Body:
+
+    - `nama_laundry` as `string`
+    - `tanggal_berdiri` as `date`,
+    - `alamat` as `string`
+    - `latitude` as `string`
+    - `logitude` as `string`
+    - `jam_buka` as `string`
+    - `jam_tutup` as `string`
+    - `telephone` as `string`
+    - `photo` as `text`, optional
+    - `rekening` as `int`, optional
+    - `bank` as `string`, optional
+
+  - Response:
+    - Status : 200
+      ```
+      {
+          "success": true,
+          "statusCode": 201,
+          "message": "Laundry created successfully",
+          "laundry": {
+              "id": "laundry-xSwrKTK37V",
+              "nama_laundry": "Ngelondry",
+              "tanggal_berdiri": "2020-04-04",
+              "alamat": "Bandung",
+              "latitude": "-10.223",
+              "longitude": "-17.321",
+              "jam_buka": "08.00 - 22.00",
+              "jam_tutup": "08.00 - 22.00",
+              "rekening" : "3242144",
+              "bank": "Mandiri"
+              "telephone": "62894837435",
+              "photo": "",
+              "ownerId": "Mandiri"
+          }
+      }
+      ```
+    - Status : 400
+      ```
+      {
+          "success": false,
+          "statusCode": 400,
+          "message": "Please complete input data!"
+      }
+      ```
+    - Status : 401
+      ```
+      Unauthorized
+      ```
+    - Status : 404
+      ```
+      {
+          "success": false,
+          "statusCode": 404,
+          "message": "User not found"
+      }
+      ```
+
+- ### Edit Service
+
+  - URL Route:
+    `/service/:idService`
+
+  - Method:
+    PUT
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Request Body :
+
+    - `jenis_service` as `string`
+    - `price` as `integer`
+
+  - Response:
+    ```
+    {
+        "success": true,
+        "message": "Service created successfully",
+        "service": {
+            "id": 3,
+            "jenis_service": "Cuci Setrika",
+            "price": "5000",
+            "ownerId": "user-o07qirMhHQ",
+            "laundryId": "laundry-y7eXrl9d4E"
+        }
+    }
+    ```
 
 - ### Logout
 
@@ -862,5 +1162,35 @@
         success: false,
         statusCode: 404,
         message: 'Laundry is not a favorite',
+      }
+      ```
+
+- ### Remove Service
+
+  - URL Route:
+    `/service/idService`
+
+  - Method:
+    DELETE
+
+  - Headers:
+
+    - `Authorization` : `Bearer <token>`
+
+  - Response:
+    - Status: 200
+      ```
+      {
+          "success": true,
+          "statusCode": 200,
+          "message": "Service removed successfully"
+      }
+      ```
+    - Status: 404
+      ```
+      {
+        success: false,
+        statusCode: 404,
+        message: 'Service not found',
       }
       ```
