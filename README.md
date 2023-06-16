@@ -5,7 +5,7 @@
 You can visit the link below directly to view the SmartRinse API documentation.
 - Link REST API = https://github.com/smart-rinse/api-smartrinse/tree/api-v2 
 - Link ML API = https://github.com/smart-rinse/api-smartrinse/tree/api-prod-ml
-- [Postman Collection for SmartRinse API](https://drive.google.com/drive/u/0/folders/1fLTXDxuLMFM6eVvVLiIUD0Va4zMWn2BK)
+- [Postman Collection for SmartRinse API](https://drive.google.com/file/d/1VDjGhzG_DQwRHvtVMBV8dv9qjerOAGky/view?usp=sharing)
 
 ## Architecture
 ![alt text](https://github.com/smart-rinse/api-smartrinse/blob/cloud-computing/img/arsitektur-cloud.jpeg?raw=true)
